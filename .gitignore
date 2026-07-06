@@ -1,0 +1,13 @@
+# 🛡️ Sentinel: Security baseline - Ignore secrets and sensitive files
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.secret
+secrets.json
+.token
+.credentials
+
+# System files
+.DS_Store
