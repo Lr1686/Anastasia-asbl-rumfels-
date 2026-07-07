@@ -9,5 +9,22 @@ secrets.json
 .token
 .credentials
 
+# 🛡️ Sentinel: Shell history and sensitive system files
+.bash_history
+.zsh_history
+.python_history
+.ssh/
+.gnupg/
+.netrc
+.npmrc
+.yarnrc
+
+# 🛡️ Sentinel: Certificate and key formats
+*.p12
+*.pfx
+*.gpg
+*.crt
+*.csr
+
 # System files
 .DS_Store
