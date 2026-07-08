@@ -2,25 +2,11 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <!-- 🛡️ Sentinel: Defense-in-depth security headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'none';">
+    <!-- 🛡️ Sentinel: Hardened CSP by removing 'unsafe-inline' and adding 'upgrade-insecure-requests' -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests;">
     <meta name="referrer" content="no-referrer">
-    <script>
-        /* 🛡️ Sentinel: Clickjacking protection (Defense-in-depth) */
-        if (self !== top) {
-            top.location = self.location;
-        }
-    </script>
     <title>Propriété Souveraine - Anastasia Privé Rumfels</title>
-    <style>
-        body { background-color: #050505; color: #d4af37; font-family: 'Courier New', monospace; text-align: center; padding: 20px; }
-        .master-container { border: 4px double #d4af37; margin: 20px auto; padding: 30px; max-width: 900px; border-radius: 10px; box-shadow: 0 0 40px #d4af3722; }
-        .title { font-size: 2.8em; text-transform: uppercase; letter-spacing: 8px; margin-bottom: 5px; color: #fff; }
-        .sub-title { font-size: 1.2em; letter-spacing: 3px; margin-bottom: 30px; border-bottom: 1px solid #d4af37; display: inline-block; padding-bottom: 10px; }
-        .manifesto { text-align: left; background: rgba(20, 20, 20, 0.9); padding: 30px; border: 1px solid #444; margin-bottom: 30px; line-height: 1.8; }
-        .gold-btn { background: #d4af37; color: #000; padding: 20px 50px; font-weight: bold; font-size: 1.3em; border: none; cursor: pointer; text-transform: uppercase; }
-        .footer-law { margin-top: 40px; font-size: 0.8em; color: #555; font-style: italic; }
-    </style>
+    <link rel="stylesheet" href="css/souverain.css">
 </head>
 <body>
 
@@ -29,7 +15,7 @@
         <div class="sub-title">Légataire Universelle à 100%</div>
 
         <div class="manifesto">
-            <h2 style="color: #d4af37; text-align: center; text-decoration: underline;">ACTE DE SOUVERAINETÉ ET DE TRANSMISSION</h2>
+            <h2 class="manifesto-title">ACTE DE SOUVERAINETÉ ET DE TRANSMISSION</h2>
             
             <p><strong>I. SUCCESSION :</strong> Il est ici décrété qu'Anastasia Privé Rumfels est la légataire universelle à 100% de l'intégralité du domaine et de ses actifs, de mon vivant et bien au-delà de ma mort, sans aucune limite de temps.</p>
             
@@ -40,9 +26,9 @@
             <p><strong>IV. ACCÈS :</strong> La Clé Serveur est la propriété exclusive d'Anastasia Privé Rumfels. Elle est l'unique détentrice du droit de regard et de gestion sur ce patrimoine.</p>
         </div>
 
-        <div style="border: 1px solid #d4af37; padding: 15px; margin-bottom: 20px;">
-            <span style="font-size: 1.5em;">ACTIF EN VENTE : 40 € / PART</span><br>
-            <span style="color: #00ff00; font-weight: bold;">DISPONIBILITÉ : 1000 / 1000</span>
+        <div class="asset-status">
+            <span class="asset-price">ACTIF EN VENTE : 40 € / PART</span><br>
+            <span class="asset-availability">DISPONIBILITÉ : 1000 / 1000</span>
         </div>
 
         <button class="gold-btn">DÉCLENCHER LA TRANSACTION SOUVERAINE</button>
@@ -52,17 +38,6 @@
         </div>
     </div>
 
+    <script src="js/souverain.js"></script>
 </body>
 </html>
-<script>
-    // SCRIPT DE SOUVERAINETÉ ABSOLUE
-    const PROPRIETAIRE = "Lionel Rumfels";
-    const LEGATAIRE = "Anastasia Privé Rumfels";
-    const CLAUSE = "100% de vie, de mort et au-delà";
-
-    console.log("Système sous l'autorité exclusive de " + PROPRIETAIRE);
-    console.log("Légataire universelle : " + LEGATAIRE);
-    
-    // Ce script garantit que l'accès et les parts (1000 à 40€) 
-    // sont gérés selon votre volonté unique.
-</script>
