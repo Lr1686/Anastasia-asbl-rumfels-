@@ -2,12 +2,11 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <!-- 🛡️ Sentinel: Hardened CSP - removed 'unsafe-inline' and added 'upgrade-insecure-requests' -->
+    <!-- 🛡️ Sentinel: Hardened CSP by removing 'unsafe-inline' and adding 'upgrade-insecure-requests' -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests;">
     <meta name="referrer" content="no-referrer">
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/script.js" defer></script>
     <title>Propriété Souveraine - Anastasia Privé Rumfels</title>
+    <link rel="stylesheet" href="css/souverain.css">
 </head>
 <body>
 
@@ -16,7 +15,7 @@
         <div class="sub-title">Légataire Universelle à 100%</div>
 
         <div class="manifesto">
-            <h2 style="color: #d4af37; text-align: center; text-decoration: underline;">ACTE DE SOUVERAINETÉ ET DE TRANSMISSION</h2>
+            <h2 class="manifesto-title">ACTE DE SOUVERAINETÉ ET DE TRANSMISSION</h2>
             
             <p><strong>I. SUCCESSION :</strong> Il est ici décrété qu'Anastasia Privé Rumfels est la légataire universelle à 100% de l'intégralité du domaine et de ses actifs, de mon vivant et bien au-delà de ma mort, sans aucune limite de temps.</p>
             
@@ -27,9 +26,9 @@
             <p><strong>IV. ACCÈS :</strong> La Clé Serveur est la propriété exclusive d'Anastasia Privé Rumfels. Elle est l'unique détentrice du droit de regard et de gestion sur ce patrimoine.</p>
         </div>
 
-        <div style="border: 1px solid #d4af37; padding: 15px; margin-bottom: 20px;">
-            <span style="font-size: 1.5em;">ACTIF EN VENTE : 40 € / PART</span><br>
-            <span style="color: #00ff00; font-weight: bold;">DISPONIBILITÉ : 1000 / 1000</span>
+        <div class="asset-status">
+            <span class="asset-price">ACTIF EN VENTE : 40 € / PART</span><br>
+            <span class="asset-availability">DISPONIBILITÉ : 1000 / 1000</span>
         </div>
 
         <button class="gold-btn">DÉCLENCHER LA TRANSACTION SOUVERAINE</button>
@@ -39,5 +38,6 @@
         </div>
     </div>
 
+    <script src="js/souverain.js"></script>
 </body>
 </html>
