@@ -2,11 +2,12 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <!-- 🛡️ Sentinel: Hardened CSP by removing 'unsafe-inline' and adding 'upgrade-insecure-requests' -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests;">
+    <!-- 🛡️ Sentinel: Hardened CSP by removing 'unsafe-inline', adding 'upgrade-insecure-requests', and restricting default-src -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests;">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), display-capture=()">
     <meta name="referrer" content="no-referrer">
     <title>Propriété Souveraine - Anastasia Privé Rumfels</title>
-    <link rel="stylesheet" href="css/souverain.css">
+    <link rel="stylesheet" href="css/souverain.css" integrity="sha384-HGjpi+DVKrwYwB6YI9+B3qolflEq+hF3k2/qPA4Zy8hrgtIo0GAFgH8+7hORIzcE" crossorigin="anonymous">
 </head>
 <body>
 
@@ -38,6 +39,6 @@
         </div>
     </div>
 
-    <script src="js/souverain.js"></script>
+    <script src="js/souverain.js" integrity="sha384-PBW/hkqV+17ios7C+hDvrQQa9jZrLO3UW5K/q21eMVe58wt3IZeZbfeybERkWlpf" crossorigin="anonymous"></script>
 </body>
 </html>
