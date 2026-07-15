@@ -1,3 +1,5 @@
+"use strict";
+
 /* 🛡️ Sentinel: Fail-closed clickjacking protection */
 if (self === top) {
     document.documentElement.style.display = 'block';
