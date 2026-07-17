@@ -1,3 +1,5 @@
+"use strict";
+
 /* 🛡️ Sentinel: Clickjacking protection (Defense-in-depth) */
 if (self !== top) {
     top.location = self.location;
