@@ -1,5 +1,9 @@
-/* 🛡️ Sentinel: Clickjacking protection (Defense-in-depth) */
-if (self !== top) {
+"use strict";
+
+/* 🛡️ Sentinel: Fail-closed clickjacking protection */
+if (self === top) {
+    document.documentElement.style.display = 'block';
+} else {
     top.location = self.location;
 }
 
