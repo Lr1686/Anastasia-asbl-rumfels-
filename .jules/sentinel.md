@@ -24,3 +24,7 @@
 **Vulnerability:** Potential for UI redress attacks (clickjacking) and DOM-based XSS.
 **Learning:** Standard "frame-busting" scripts can be bypassed or disabled. A "fail-closed" approach—where the UI is hidden by default and only revealed if the page is not framed—provides much stronger protection. Furthermore, enabling Trusted Types in the CSP provides a modern defense against DOM XSS.
 **Prevention:** Implement `html { display: none; }` in CSS and reveal it via JS only after verifying `self === top`. Harden CSP with `require-trusted-types-for 'script'` and expand `Permissions-Policy` to disable all unused browser features.
+## 2026-07-12 - Fail-Closed Clickjacking Protection and Trusted Types
+**Vulnerability:** Standard frame-busting scripts can be bypassed; lack of DOM XSS defense-in-depth.
+**Learning:** Traditional clickjacking protection (like `if (self !== top) top.location = self.location`) can sometimes be mitigated by a framing page using the `sandbox` attribute. A "fail-closed" approach where the UI is hidden by default via CSS and only revealed via JS after a successful `self === top` check is much more robust. Additionally, adding `require-trusted-types-for 'script'` to the CSP helps prevent DOM-based XSS by requiring developers to use Trusted Types policies instead of dangerous sinks.
+**Prevention:** Use `html { display: none; }` in CSS and `if (self === top) document.documentElement.style.display = 'block';` in JS. Always include `require-trusted-types-for 'script'` in CSP for modern browser protection.

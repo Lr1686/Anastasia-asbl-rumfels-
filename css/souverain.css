@@ -1,6 +1,4 @@
-/* 🛡️ Sentinel: Fail-closed clickjacking protection - hidden by default */
 html { display: none; }
-
 body { background-color: #050505; color: #d4af37; font-family: 'Courier New', monospace; text-align: center; padding: 20px; }
 .master-container { border: 4px double #d4af37; margin: 20px auto; padding: 30px; max-width: 900px; border-radius: 10px; box-shadow: 0 0 40px #d4af3722; }
 .title { font-size: 2.8em; text-transform: uppercase; letter-spacing: 8px; margin-bottom: 5px; color: #fff; }
