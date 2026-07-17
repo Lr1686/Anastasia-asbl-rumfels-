@@ -29,3 +29,7 @@
 **Vulnerability:** Potential for DOM XSS via Trusted Types and common JS pitfalls.
 **Learning:** Adding `trusted-types 'none'` to CSP (when used with `require-trusted-types-for 'script'`) completely blocks the creation of any Trusted Types policies, providing the highest level of defense-in-depth against DOM XSS for applications that don't need them. Enabling `"use strict";` in JS prevents accidental global variables and other insecure practices.
 **Prevention:** Use `trusted-types 'none'` in CSP for static sites with no dynamic policy needs. Always enforce `"use strict";` in core JS assets.
+## 2026-07-14 - Attack Surface Reduction and Header Hardening
+**Vulnerability:** Unused legacy assets and missing modern security headers (Trusted Types 'none', expanded Permissions-Policy).
+**Learning:** Maintaining unused code increases the attack surface unnecessarily. Modern headers like `trusted-types 'none'` and comprehensive `Permissions-Policy` provide additional layers of defense-in-depth even for static sites.
+**Prevention:** Regularly audit for and remove unused assets. Implement restrictive modern security headers by default, including `trusted-types 'none'` to block DOM-based XSS injection sinks.
