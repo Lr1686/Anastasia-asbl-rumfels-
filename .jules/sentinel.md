@@ -25,7 +25,7 @@
 **Learning:** Traditional clickjacking protection (like `if (self !== top) top.location = self.location`) can sometimes be mitigated by a framing page using the `sandbox` attribute. A "fail-closed" approach where the UI is hidden by default via CSS and only revealed via JS after a successful `self === top` check is much more robust. Additionally, adding `require-trusted-types-for 'script'` to the CSP helps prevent DOM-based XSS by requiring developers to use Trusted Types policies instead of dangerous sinks.
 **Prevention:** Use `html { display: none; }` in CSS and `if (self === top) document.documentElement.style.display = 'block';` in JS. Always include `require-trusted-types-for 'script'` in CSP for modern browser protection.
 
-## 2026-07-15 - Trusted Types Lockdown and CSP Meta Constraints
-**Vulnerability:** Potential for DOM-XSS via Trusted Types policy abuse; reliance on ineffective CSP directives in meta tags.
-**Learning:** While `require-trusted-types-for 'script'` requires policies for sinks, it doesn't prevent an attacker from creating a malicious policy if they can find an injection point. Adding `trusted-types 'none'` explicitly blocks all policy creation, providing a maximum lockdown. Furthermore, confirmed through browser verification that `frame-ancestors` is ignored when delivered via `<meta>` tags, reinforcing the need for client-side "fail-closed" clickjacking protection in static environments.
-**Prevention:** Always pair `require-trusted-types-for 'script'` with `trusted-types 'none'` for static sites to prevent any policy-based bypasses. Do not rely on CSP meta tags for framing protection; use the "fail-closed" UI pattern instead.
+## 2026-07-13 - Policy Hardening and Attack Surface Reduction
+**Vulnerability:** Excess attack surface and permissive feature policies.
+**Learning:** Security can be further tightened by explicitly disabling unused browser features via `Permissions-Policy` (like `interest-cohort` for privacy) and disabling Trusted Types creation via CSP when not needed. Removing legacy, unused assets reduces the maintenance burden and potential entry points for attackers.
+**Prevention:** Regularly audit and disable unused browser features. Use `"use strict";` in all JS files. Prune unused code and assets to maintain a minimal, secure footprint.
