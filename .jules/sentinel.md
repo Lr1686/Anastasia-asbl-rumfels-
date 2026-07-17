@@ -24,3 +24,8 @@
 **Vulnerability:** Standard frame-busting scripts can be bypassed; lack of DOM XSS defense-in-depth.
 **Learning:** Traditional clickjacking protection (like `if (self !== top) top.location = self.location`) can sometimes be mitigated by a framing page using the `sandbox` attribute. A "fail-closed" approach where the UI is hidden by default via CSS and only revealed via JS after a successful `self === top` check is much more robust. Additionally, adding `require-trusted-types-for 'script'` to the CSP helps prevent DOM-based XSS by requiring developers to use Trusted Types policies instead of dangerous sinks.
 **Prevention:** Use `html { display: none; }` in CSS and `if (self === top) document.documentElement.style.display = 'block';` in JS. Always include `require-trusted-types-for 'script'` in CSP for modern browser protection.
+
+## 2026-07-17 - Strict Mode Enforcement and CSP Trusted-Types Lockdown
+**Vulnerability:** Loose JavaScript execution modes and potential DOM XSS policy abuse.
+**Learning:** Even with clickjacking protection and externalized scripts, omitting the `"use strict";` directive can allow dangerous global variables or silent failures to compromise the runtime integrity of the page. Furthermore, requiring Trusted Types without explicitly setting `trusted-types 'none'` leaves open the possibility that a malicious script could define and abuse a custom Trusted Type policy to perform DOM-based XSS.
+**Prevention:** Always include the `"use strict";` directive at the top of all core JavaScript assets. Explicitly define `trusted-types 'none'` in the Content-Security-Policy to block all Trusted Type policies, ensuring absolute lockdown against DOM-based injection.
