@@ -33,3 +33,8 @@
 **Vulnerability:** Unused legacy assets and missing modern security headers (Trusted Types 'none', expanded Permissions-Policy).
 **Learning:** Maintaining unused code increases the attack surface unnecessarily. Modern headers like `trusted-types 'none'` and comprehensive `Permissions-Policy` provide additional layers of defense-in-depth even for static sites.
 **Prevention:** Regularly audit for and remove unused assets. Implement restrictive modern security headers by default, including `trusted-types 'none'` to block DOM-based XSS injection sinks.
+
+## 2026-07-18 - Strict CSP Style compliance and Inline Styles Elimination
+**Vulnerability:** Strict Content Security Policy style-src 'self' blocked by inline styles.
+**Learning:** Defining a strict Content Security Policy with `style-src 'self'` prevents any inline style attributes on HTML elements from executing. In this codebase, the active sale status box was hardcoded with inline styles, triggering browser security blocks. To prevent the temptation of relaxing the CSP to `'unsafe-inline'` (which exposes the app to dangerous CSS injection and DOM data exfiltration), inline styles must be externalized to pre-defined classes.
+**Prevention:** Migrate all remaining inline style attributes to existing or new CSS rules within the secure, integrity-validated external stylesheet.
