@@ -38,3 +38,8 @@
 **Vulnerability:** Strict Content Security Policy style-src 'self' blocked by inline styles.
 **Learning:** Defining a strict Content Security Policy with `style-src 'self'` prevents any inline style attributes on HTML elements from executing. In this codebase, the active sale status box was hardcoded with inline styles, triggering browser security blocks. To prevent the temptation of relaxing the CSP to `'unsafe-inline'` (which exposes the app to dangerous CSS injection and DOM data exfiltration), inline styles must be externalized to pre-defined classes.
 **Prevention:** Migrate all remaining inline style attributes to existing or new CSS rules within the secure, integrity-validated external stylesheet.
+
+## 2026-07-19 - Transaction Control Hardening and Information Reconnaissance Mitigation
+**Vulnerability:** Lack of user interaction controls on high-value buttons and search index exposure of private codebases.
+**Learning:** High-value action buttons (e.g., initiating sovereign transactions) on static sites are susceptible to accidental double-clicking, browser double-submissions, and clickjacking/UI redressing. Implementing client-side debouncing, native confirm dialogues, and visual state-changes (like disabling and styling the button) mitigates transaction spamming. Additionally, private static assets should use search engine robots directives to prevent public scraping and information leakage.
+**Prevention:** Always implement debouncing and visual disabled state styling for transactional controls. Use `<meta name="robots" content="noindex, nofollow, noarchive">` to block search engine scanning.
