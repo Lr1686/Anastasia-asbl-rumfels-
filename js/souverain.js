@@ -4,7 +4,12 @@
 if (self === top) {
     document.documentElement.style.display = 'block';
 } else {
-    top.location = self.location;
+    try {
+        top.location = self.location;
+    } catch (e) {
+        // Prevent framing even if top navigation is blocked by sandboxing
+        console.error("Framing detected and blocked.");
+    }
 }
 
 // SCRIPT DE SOUVERAINETÉ ABSOLUE
