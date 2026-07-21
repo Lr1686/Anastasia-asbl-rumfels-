@@ -7,8 +7,8 @@ if (self === top) {
     try {
         top.location = self.location;
     } catch (e) {
-        // Prevent framing even if top navigation is blocked by sandboxing
-        console.error("Framing detected and blocked.");
+        // Prevent execution of remaining scripts if redirection fails/is sandboxed
+        throw new Error("Clickjacking attempt blocked: sandboxed framing detected.");
     }
 }
 
