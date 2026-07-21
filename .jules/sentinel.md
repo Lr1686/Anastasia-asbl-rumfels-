@@ -38,3 +38,8 @@
 **Vulnerability:** Strict Content Security Policy style-src 'self' blocked by inline styles.
 **Learning:** Defining a strict Content Security Policy with `style-src 'self'` prevents any inline style attributes on HTML elements from executing. In this codebase, the active sale status box was hardcoded with inline styles, triggering browser security blocks. To prevent the temptation of relaxing the CSP to `'unsafe-inline'` (which exposes the app to dangerous CSS injection and DOM data exfiltration), inline styles must be externalized to pre-defined classes.
 **Prevention:** Migrate all remaining inline style attributes to existing or new CSS rules within the secure, integrity-validated external stylesheet.
+
+## 2026-07-21 - Sandboxed Framebusting and Hardened Permissions Policy
+**Vulnerability:** Bypassing clickjacking protection via sandboxed iframe framing and unused hardware/browser features.
+**Learning:** Standard client-side clickjacking prevention scripts can be disabled or bypassed if framed in a sandboxed iframe that blocks top-level redirection. Wrapping the top-level redirection in a try-catch block and throwing an error prevents subsequent scripts from executing in a sandboxed context while fail-closed CSS keeps the interface hidden. Additionally, configuring a comprehensive Permissions Policy reduces the client-side attack surface by explicitly disabling unused device hardware and browser features.
+**Prevention:** Always use resilient try-catch blocks around top-level redirection code in framebusters. Maintain a exhaustive, restrictive Permissions Policy meta tag or response header to minimize unused browser capabilities.
