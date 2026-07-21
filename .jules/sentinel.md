@@ -29,3 +29,17 @@
 **Vulnerability:** Potential for DOM XSS via Trusted Types and common JS pitfalls.
 **Learning:** Adding `trusted-types 'none'` to CSP (when used with `require-trusted-types-for 'script'`) completely blocks the creation of any Trusted Types policies, providing the highest level of defense-in-depth against DOM XSS for applications that don't need them. Enabling `"use strict";` in JS prevents accidental global variables and other insecure practices.
 **Prevention:** Use `trusted-types 'none'` in CSP for static sites with no dynamic policy needs. Always enforce `"use strict";` in core JS assets.
+## 2026-07-14 - Attack Surface Reduction and Header Hardening
+**Vulnerability:** Unused legacy assets and missing modern security headers (Trusted Types 'none', expanded Permissions-Policy).
+**Learning:** Maintaining unused code increases the attack surface unnecessarily. Modern headers like `trusted-types 'none'` and comprehensive `Permissions-Policy` provide additional layers of defense-in-depth even for static sites.
+**Prevention:** Regularly audit for and remove unused assets. Implement restrictive modern security headers by default, including `trusted-types 'none'` to block DOM-based XSS injection sinks.
+
+## 2026-07-18 - Strict CSP Style compliance and Inline Styles Elimination
+**Vulnerability:** Strict Content Security Policy style-src 'self' blocked by inline styles.
+**Learning:** Defining a strict Content Security Policy with `style-src 'self'` prevents any inline style attributes on HTML elements from executing. In this codebase, the active sale status box was hardcoded with inline styles, triggering browser security blocks. To prevent the temptation of relaxing the CSP to `'unsafe-inline'` (which exposes the app to dangerous CSS injection and DOM data exfiltration), inline styles must be externalized to pre-defined classes.
+**Prevention:** Migrate all remaining inline style attributes to existing or new CSS rules within the secure, integrity-validated external stylesheet.
+
+## 2026-07-21 - Sandboxed Framebusting and Hardened Permissions Policy
+**Vulnerability:** Bypassing clickjacking protection via sandboxed iframe framing and unused hardware/browser features.
+**Learning:** Standard client-side clickjacking prevention scripts can be disabled or bypassed if framed in a sandboxed iframe that blocks top-level redirection. Wrapping the top-level redirection in a try-catch block and throwing an error prevents subsequent scripts from executing in a sandboxed context while fail-closed CSS keeps the interface hidden. Additionally, configuring a comprehensive Permissions Policy reduces the client-side attack surface by explicitly disabling unused device hardware and browser features.
+**Prevention:** Always use resilient try-catch blocks around top-level redirection code in framebusters. Maintain a exhaustive, restrictive Permissions Policy meta tag or response header to minimize unused browser capabilities.
