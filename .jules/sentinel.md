@@ -43,3 +43,8 @@
 **Vulnerability:** Lack of user interaction controls on high-value buttons and search index exposure of private codebases.
 **Learning:** High-value action buttons (e.g., initiating sovereign transactions) on static sites are susceptible to accidental double-clicking, browser double-submissions, and clickjacking/UI redressing. Implementing client-side debouncing, native confirm dialogues, and visual state-changes (like disabling and styling the button) mitigates transaction spamming. Additionally, private static assets should use search engine robots directives to prevent public scraping and information leakage.
 **Prevention:** Always implement debouncing and visual disabled state styling for transactional controls. Use `<meta name="robots" content="noindex, nofollow, noarchive">` to block search engine scanning.
+
+## 2026-07-22 - Subresource Integrity Hash Synchronization and Availability Failure
+**Vulnerability:** Mismatched Subresource Integrity (SRI) hashes on core security-related scripts.
+**Learning:** Modifying externalized assets (e.g., `js/souverain.js`) without synchronizing their integrity hashes in the entry document (`index.html`) triggers browser security blocks. Under client-side 'fail-closed' configurations (where the UI is hidden until JS executes), any block on the core JS file results in a complete availability failure—rendering the page blank and disabling clickjacking protections.
+**Prevention:** Always recalculate and update the Subresource Integrity (SRI) SHA-384 hashes in the referencing HTML whenever script or style assets are updated. Validate the site loads with zero console or integrity errors.
