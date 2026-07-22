@@ -20,6 +20,10 @@
 **Learning:** Static sites that claim to be "unattackable" should employ Subresource Integrity (SRI) to guarantee that only verified assets are executed. Furthermore, a `default-src 'self'` policy is still more permissive than necessary; `default-src 'none'` is the true secure baseline for static pages with known dependencies.
 **Prevention:** Implement SRI hashes for all external scripts and styles. Harden the CSP by setting `default-src 'none'` and explicitly allowing only trusted local assets. Use `Permissions-Policy` to disable unused browser features (camera, mic, etc.) by default.
 
+## 2026-07-11 - Fail-Closed Clickjacking Protection and CSP Hardening
+**Vulnerability:** Potential for UI redress attacks (clickjacking) and DOM-based XSS.
+**Learning:** Standard "frame-busting" scripts can be bypassed or disabled. A "fail-closed" approach—where the UI is hidden by default and only revealed if the page is not framed—provides much stronger protection. Furthermore, enabling Trusted Types in the CSP provides a modern defense against DOM XSS.
+**Prevention:** Implement `html { display: none; }` in CSS and reveal it via JS only after verifying `self === top`. Harden CSP with `require-trusted-types-for 'script'` and expand `Permissions-Policy` to disable all unused browser features.
 ## 2026-07-12 - Fail-Closed Clickjacking Protection and Trusted Types
 **Vulnerability:** Standard frame-busting scripts can be bypassed; lack of DOM XSS defense-in-depth.
 **Learning:** Traditional clickjacking protection (like `if (self !== top) top.location = self.location`) can sometimes be mitigated by a framing page using the `sandbox` attribute. A "fail-closed" approach where the UI is hidden by default via CSS and only revealed via JS after a successful `self === top` check is much more robust. Additionally, adding `require-trusted-types-for 'script'` to the CSP helps prevent DOM-based XSS by requiring developers to use Trusted Types policies instead of dangerous sinks.
@@ -39,7 +43,12 @@
 **Learning:** Defining a strict Content Security Policy with `style-src 'self'` prevents any inline style attributes on HTML elements from executing. In this codebase, the active sale status box was hardcoded with inline styles, triggering browser security blocks. To prevent the temptation of relaxing the CSP to `'unsafe-inline'` (which exposes the app to dangerous CSS injection and DOM data exfiltration), inline styles must be externalized to pre-defined classes.
 **Prevention:** Migrate all remaining inline style attributes to existing or new CSS rules within the secure, integrity-validated external stylesheet.
 
-## 2026-07-21 - Sandboxed Framebusting and Hardened Permissions Policy
-**Vulnerability:** Bypassing clickjacking protection via sandboxed iframe framing and unused hardware/browser features.
-**Learning:** Standard client-side clickjacking prevention scripts can be disabled or bypassed if framed in a sandboxed iframe that blocks top-level redirection. Wrapping the top-level redirection in a try-catch block and throwing an error prevents subsequent scripts from executing in a sandboxed context while fail-closed CSS keeps the interface hidden. Additionally, configuring a comprehensive Permissions Policy reduces the client-side attack surface by explicitly disabling unused device hardware and browser features.
-**Prevention:** Always use resilient try-catch blocks around top-level redirection code in framebusters. Maintain a exhaustive, restrictive Permissions Policy meta tag or response header to minimize unused browser capabilities.
+## 2026-07-19 - Transaction Control Hardening and Information Reconnaissance Mitigation
+**Vulnerability:** Lack of user interaction controls on high-value buttons and search index exposure of private codebases.
+**Learning:** High-value action buttons (e.g., initiating sovereign transactions) on static sites are susceptible to accidental double-clicking, browser double-submissions, and clickjacking/UI redressing. Implementing client-side debouncing, native confirm dialogues, and visual state-changes (like disabling and styling the button) mitigates transaction spamming. Additionally, private static assets should use search engine robots directives to prevent public scraping and information leakage.
+**Prevention:** Always implement debouncing and visual disabled state styling for transactional controls. Use `<meta name="robots" content="noindex, nofollow, noarchive">` to block search engine scanning.
+
+## 2026-07-22 - Subresource Integrity Hash Synchronization and Availability Failure
+**Vulnerability:** Mismatched Subresource Integrity (SRI) hashes on core security-related scripts.
+**Learning:** Modifying externalized assets (e.g., `js/souverain.js`) without synchronizing their integrity hashes in the entry document (`index.html`) triggers browser security blocks. Under client-side 'fail-closed' configurations (where the UI is hidden until JS executes), any block on the core JS file results in a complete availability failure—rendering the page blank and disabling clickjacking protections.
+**Prevention:** Always recalculate and update the Subresource Integrity (SRI) SHA-384 hashes in the referencing HTML whenever script or style assets are updated. Validate the site loads with zero console or integrity errors.

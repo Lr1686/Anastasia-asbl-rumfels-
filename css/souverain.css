@@ -12,3 +12,6 @@ body { background-color: #050505; color: #d4af37; font-family: 'Courier New', mo
 .asset-status { border: 1px solid #d4af37; padding: 15px; margin-bottom: 20px; }
 .asset-price { font-size: 1.5em; }
 .asset-availability { color: #00ff00; font-weight: bold; }
+
+/* 🛡️ Sentinel: Secure disabled button state styling */
+.gold-btn:disabled { background: #555; color: #aaa; cursor: not-allowed; opacity: 0.6; }
