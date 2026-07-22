@@ -33,3 +33,18 @@
 **Vulnerability:** Unused legacy assets and missing modern security headers (Trusted Types 'none', expanded Permissions-Policy).
 **Learning:** Maintaining unused code increases the attack surface unnecessarily. Modern headers like `trusted-types 'none'` and comprehensive `Permissions-Policy` provide additional layers of defense-in-depth even for static sites.
 **Prevention:** Regularly audit for and remove unused assets. Implement restrictive modern security headers by default, including `trusted-types 'none'` to block DOM-based XSS injection sinks.
+
+## 2026-07-18 - Strict CSP Style compliance and Inline Styles Elimination
+**Vulnerability:** Strict Content Security Policy style-src 'self' blocked by inline styles.
+**Learning:** Defining a strict Content Security Policy with `style-src 'self'` prevents any inline style attributes on HTML elements from executing. In this codebase, the active sale status box was hardcoded with inline styles, triggering browser security blocks. To prevent the temptation of relaxing the CSP to `'unsafe-inline'` (which exposes the app to dangerous CSS injection and DOM data exfiltration), inline styles must be externalized to pre-defined classes.
+**Prevention:** Migrate all remaining inline style attributes to existing or new CSS rules within the secure, integrity-validated external stylesheet.
+
+## 2026-07-19 - Transaction Control Hardening and Information Reconnaissance Mitigation
+**Vulnerability:** Lack of user interaction controls on high-value buttons and search index exposure of private codebases.
+**Learning:** High-value action buttons (e.g., initiating sovereign transactions) on static sites are susceptible to accidental double-clicking, browser double-submissions, and clickjacking/UI redressing. Implementing client-side debouncing, native confirm dialogues, and visual state-changes (like disabling and styling the button) mitigates transaction spamming. Additionally, private static assets should use search engine robots directives to prevent public scraping and information leakage.
+**Prevention:** Always implement debouncing and visual disabled state styling for transactional controls. Use `<meta name="robots" content="noindex, nofollow, noarchive">` to block search engine scanning.
+
+## 2026-07-22 - Subresource Integrity Hash Synchronization and Availability Failure
+**Vulnerability:** Mismatched Subresource Integrity (SRI) hashes on core security-related scripts.
+**Learning:** Modifying externalized assets (e.g., `js/souverain.js`) without synchronizing their integrity hashes in the entry document (`index.html`) triggers browser security blocks. Under client-side 'fail-closed' configurations (where the UI is hidden until JS executes), any block on the core JS file results in a complete availability failure—rendering the page blank and disabling clickjacking protections.
+**Prevention:** Always recalculate and update the Subresource Integrity (SRI) SHA-384 hashes in the referencing HTML whenever script or style assets are updated. Validate the site loads with zero console or integrity errors.
