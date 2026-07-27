@@ -52,3 +52,8 @@
 **Vulnerability:** Mismatched Subresource Integrity (SRI) hashes on core security-related scripts.
 **Learning:** Modifying externalized assets (e.g., `js/souverain.js`) without synchronizing their integrity hashes in the entry document (`index.html`) triggers browser security blocks. Under client-side 'fail-closed' configurations (where the UI is hidden until JS executes), any block on the core JS file results in a complete availability failure—rendering the page blank and disabling clickjacking protections.
 **Prevention:** Always recalculate and update the Subresource Integrity (SRI) SHA-384 hashes in the referencing HTML whenever script or style assets are updated. Validate the site loads with zero console or integrity errors.
+
+## 2026-07-27 - Permissions-Policy and CSP Meta Hardening
+**Vulnerability:** Drift from the hardened baseline meta-headers and missing automated verification scripts.
+**Learning:** Development iterations or branch merges can inadvertently lead to configuration drift, leaving out critical security protections like modern browser feature restriction (e.g. `ambient-light-sensor`, `sync-xhr`) and strict Trusted Types policies (`trusted-types 'none'`). Without automated regression testing, these discrepancies can go undetected.
+**Prevention:** Align and harden meta CSP and Permissions-Policy configurations to match the optimal defense-in-depth security profile. Establish a dedicated automated verification test script using Python and Playwright to programmatically assert the presence and exact content of security headers and prevent future drift.
