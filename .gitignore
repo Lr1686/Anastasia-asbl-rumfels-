@@ -28,3 +28,10 @@ secrets.json
 
 # System files
 .DS_Store
+
+# Python build and cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/

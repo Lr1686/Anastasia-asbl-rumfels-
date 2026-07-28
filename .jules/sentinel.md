@@ -52,3 +52,8 @@
 **Vulnerability:** Mismatched Subresource Integrity (SRI) hashes on core security-related scripts.
 **Learning:** Modifying externalized assets (e.g., `js/souverain.js`) without synchronizing their integrity hashes in the entry document (`index.html`) triggers browser security blocks. Under client-side 'fail-closed' configurations (where the UI is hidden until JS executes), any block on the core JS file results in a complete availability failure—rendering the page blank and disabling clickjacking protections.
 **Prevention:** Always recalculate and update the Subresource Integrity (SRI) SHA-384 hashes in the referencing HTML whenever script or style assets are updated. Validate the site loads with zero console or integrity errors.
+
+## 2026-07-28 - CSP Trusted Types Lockdown and Permissions-Policy Expansion
+**Vulnerability:** Excess attack surface due to unconfigured browser APIs and lack of strict Trusted Types blocking.
+**Learning:** For highly restricted static sites that do not require any dynamic scripts or third-party web APIs, leaving modern browser capabilities (such as Bluetooth, ambient light, gamepad) enabled by default exposes users to ambient profiling and exploitation. Furthermore, while the CSP had `require-trusted-types-for 'script'`, omitting `trusted-types 'none'` left open the possibility of registering policies that might allow injection.
+**Prevention:** Always restrict all unused browser capabilities via a highly comprehensive `Permissions-Policy` and fully seal the DOM XSS sink pathway by explicitly setting `trusted-types 'none'` in the CSP.
