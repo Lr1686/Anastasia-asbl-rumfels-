@@ -28,3 +28,9 @@ secrets.json
 
 # System files
 .DS_Store
+
+# 🛡️ Sentinel: Python bytecode and caches
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/

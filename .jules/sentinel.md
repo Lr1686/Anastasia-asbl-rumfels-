@@ -52,3 +52,8 @@
 **Vulnerability:** Mismatched Subresource Integrity (SRI) hashes on core security-related scripts.
 **Learning:** Modifying externalized assets (e.g., `js/souverain.js`) without synchronizing their integrity hashes in the entry document (`index.html`) triggers browser security blocks. Under client-side 'fail-closed' configurations (where the UI is hidden until JS executes), any block on the core JS file results in a complete availability failure—rendering the page blank and disabling clickjacking protections.
 **Prevention:** Always recalculate and update the Subresource Integrity (SRI) SHA-384 hashes in the referencing HTML whenever script or style assets are updated. Validate the site loads with zero console or integrity errors.
+
+## 2026-07-30 - Content Security Policy and Permissions-Policy Reinforcement
+**Vulnerability:** Overly permissive Content Security Policy missing trusted-types 'none' and explicit 'none' source types, along with incomplete Permissions-Policy.
+**Learning:** Without explicit 'none' for unused source types and trusted-types 'none', the app maintains a larger threat footprint than necessary. An incomplete Permissions-Policy leaves the origin exposed to unused modern device and browser APIs.
+**Prevention:** Strictly enforce Trusted Types lockdown (trusted-types 'none') and explicit blocklisting/none-sourcing for all unused browser resources and device features to ensure full defense-in-depth.
