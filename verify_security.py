@@ -76,7 +76,7 @@ def main():
             "ambient-light-sensor=()", "autoplay=()", "battery=()", "document-domain=()",
             "encrypted-media=()", "execution-while-not-rendered=()", "execution-while-out-of-viewport=()",
             "fullscreen=()", "gamepad=()", "picture-in-picture=()", "screen-wake-lock=()",
-            "web-share=()", "xr-spatial-tracking=()"
+            "web-share=()", "xr-spatial-tracking=()", "interest-cohort=()", "hid=()", "serial=()", "sync-xhr=()"
         ]
         for policy in expected_policies:
             if policy not in permissions_content:
