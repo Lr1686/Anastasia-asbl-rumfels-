@@ -52,3 +52,8 @@
 **Vulnerability:** Mismatched Subresource Integrity (SRI) hashes on core security-related scripts.
 **Learning:** Modifying externalized assets (e.g., `js/souverain.js`) without synchronizing their integrity hashes in the entry document (`index.html`) triggers browser security blocks. Under client-side 'fail-closed' configurations (where the UI is hidden until JS executes), any block on the core JS file results in a complete availability failure—rendering the page blank and disabling clickjacking protections.
 **Prevention:** Always recalculate and update the Subresource Integrity (SRI) SHA-384 hashes in the referencing HTML whenever script or style assets are updated. Validate the site loads with zero console or integrity errors.
+
+## 2026-07-24 - Enterprise Hardening and Complete Feature Disabling
+**Vulnerability:** Excess attack surface from unused browser features and lacks DOM XSS defense-in-depth policy locking.
+**Learning:** High-security applications should minimize their client-side capabilities. Implementing `trusted-types 'none'` blocks all dynamic policy creation, completely mitigating any chance of DOM-based XSS vectors. Similarly, an extensive `Permissions-Policy` ensures the browser context is sandboxed against unauthorized hardware and sensor access.
+**Prevention:** Always maintain a fully populated `Permissions-Policy` blocking all modern device APIs and lock down Trusted Types with `trusted-types 'none'` in the Content Security Policy header or meta tag.
