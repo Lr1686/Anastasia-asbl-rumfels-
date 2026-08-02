@@ -57,3 +57,8 @@
 **Vulnerability:** Excess attack surface from unused browser features and lacks DOM XSS defense-in-depth policy locking.
 **Learning:** High-security applications should minimize their client-side capabilities. Implementing `trusted-types 'none'` blocks all dynamic policy creation, completely mitigating any chance of DOM-based XSS vectors. Similarly, an extensive `Permissions-Policy` ensures the browser context is sandboxed against unauthorized hardware and sensor access.
 **Prevention:** Always maintain a fully populated `Permissions-Policy` blocking all modern device APIs and lock down Trusted Types with `trusted-types 'none'` in the Content Security Policy header or meta tag.
+
+## 2026-08-02 - Transaction Handler Race Condition Prevention & CSP Minimization
+**Vulnerability:** Transaction execution handler bypass and race condition under strict CSP configurations.
+**Learning:** Relying purely on `DOMContentLoaded` events can introduce race conditions if scripts are fetched or executed asynchronously after the DOM is already interactive/complete. In such scenarios, transactional and protection event listeners fail to attach, bypassing user action validation and debouncing controls. Furthermore, any unused directive in Content-Security-Policy must be explicitly blocked with `'none'` to minimize potential future vector space.
+**Prevention:** Always wrap script initializers with a check on `document.readyState` to immediately execute handlers if the document has already parsed. Explicitly set `'none'` for unused resource types (`connect-src`, `img-src`, `font-src`, `frame-src`, `media-src`, `manifest-src`, `worker-src`) to minimize the application's attack surface.
