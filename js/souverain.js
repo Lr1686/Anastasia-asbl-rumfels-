@@ -23,8 +23,9 @@ console.log("Légataire universelle : " + LEGATAIRE);
 // Ce script garantit que l'accès et les parts (1000 à 40€)
 // sont gérés selon votre volonté unique.
 
-// 🛡️ Sentinel: Secure transaction handler with debouncing and confirmation to prevent clickjacking/double-click spamming
-document.addEventListener("DOMContentLoaded", () => {
+// 🛡️ Sentinel: Secure transaction handler with debouncing and confirmation to prevent clickjacking/double-click spamming.
+// Hardened against DOM initialization race conditions by checking document.readyState before registering or firing listeners.
+const initTransactionHandler = () => {
     const goldBtn = document.querySelector(".gold-btn");
     if (goldBtn) {
         let isProcessing = false;
@@ -53,4 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 3000);
         });
     }
-});
+};
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initTransactionHandler);
+} else {
+    initTransactionHandler();
+}

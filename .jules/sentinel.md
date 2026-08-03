@@ -57,3 +57,8 @@
 **Vulnerability:** Excess attack surface from unused browser features and lacks DOM XSS defense-in-depth policy locking.
 **Learning:** High-security applications should minimize their client-side capabilities. Implementing `trusted-types 'none'` blocks all dynamic policy creation, completely mitigating any chance of DOM-based XSS vectors. Similarly, an extensive `Permissions-Policy` ensures the browser context is sandboxed against unauthorized hardware and sensor access.
 **Prevention:** Always maintain a fully populated `Permissions-Policy` blocking all modern device APIs and lock down Trusted Types with `trusted-types 'none'` in the Content Security Policy header or meta tag.
+
+## 2026-08-03 - DOM Initialization Race Conditions
+**Vulnerability:** DOM initialization race conditions resulting in missed transaction handler registration or clickjacking fail-closed state failures.
+**Learning:** Registering transaction event handlers inside a standard `DOMContentLoaded` event listener can fail if the script is loaded asynchronously or from Cache after the DOM has already finished parsing and entering an interactive or complete state. In such situations, the event listener is registered after the event has already fired, rendering the UI's action controls non-functional.
+**Prevention:** Always inspect `document.readyState` before registering DOM initialization handlers. If the state is `"loading"`, register the `DOMContentLoaded` listener; otherwise, invoke the initializer immediately.
