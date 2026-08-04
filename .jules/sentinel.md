@@ -57,3 +57,8 @@
 **Vulnerability:** Excess attack surface from unused browser features and lacks DOM XSS defense-in-depth policy locking.
 **Learning:** High-security applications should minimize their client-side capabilities. Implementing `trusted-types 'none'` blocks all dynamic policy creation, completely mitigating any chance of DOM-based XSS vectors. Similarly, an extensive `Permissions-Policy` ensures the browser context is sandboxed against unauthorized hardware and sensor access.
 **Prevention:** Always maintain a fully populated `Permissions-Policy` blocking all modern device APIs and lock down Trusted Types with `trusted-types 'none'` in the Content Security Policy header or meta tag.
+
+## 2026-07-25 - Transaction Control Initialization Race Condition Hardening
+**Vulnerability:** Secure transaction controls failing to bind due to initialization race conditions.
+**Learning:** Depending solely on the `DOMContentLoaded` event can introduce a race condition if scripts load or execute asynchronously after the DOM has already completed parsing. Under these conditions, the event listener is never fired, rendering critical security and transactional controls completely inert.
+**Prevention:** Always check `document.readyState` before registering event listeners. If the DOM is already interactive or complete, invoke the handler immediately to guarantee initialization.
