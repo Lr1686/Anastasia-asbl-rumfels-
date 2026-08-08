@@ -28,7 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const goldBtn = document.querySelector(".gold-btn");
     if (goldBtn) {
         let isProcessing = false;
-        goldBtn.addEventListener("click", () => {
+        goldBtn.addEventListener("click", (event) => {
+            // 🛡️ Sentinel: Prevent programmatic synthetic click automation
+            if (!event.isTrusted) {
+                console.warn("🛡️ Sentinel: Programmatic or untrusted click event blocked.");
+                return;
+            }
+
             if (isProcessing) return;
 
             // Secure confirmation dialog to prevent accidental triggers
