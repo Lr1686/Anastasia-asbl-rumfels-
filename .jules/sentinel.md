@@ -57,3 +57,8 @@
 **Vulnerability:** Excess attack surface from unused browser features and lacks DOM XSS defense-in-depth policy locking.
 **Learning:** High-security applications should minimize their client-side capabilities. Implementing `trusted-types 'none'` blocks all dynamic policy creation, completely mitigating any chance of DOM-based XSS vectors. Similarly, an extensive `Permissions-Policy` ensures the browser context is sandboxed against unauthorized hardware and sensor access.
 **Prevention:** Always maintain a fully populated `Permissions-Policy` blocking all modern device APIs and lock down Trusted Types with `trusted-types 'none'` in the Content Security Policy header or meta tag.
+
+## 2026-07-25 - Transaction Control Hardening and Synthetic Click Prevention
+**Vulnerability:** Exposure of transactional UI elements to programmatic/synthetic click injection and automated redressing triggers.
+**Learning:** High-value actions (such as initiating sovereign transactions) are prime targets for automated UI exploits, clickjacking framing, and synthetic scripting. Client-side debouncing and confirmation are helpful, but without validating user intention via native trusted events, malicious framing environments or automated browser extensions can programmatically click critical elements. Asserting the `event.isTrusted` property on event handlers mitigates non-user-initiated interactions.
+**Prevention:** Always check `event.isTrusted` inside click handlers for high-importance actions before processing the transaction.
