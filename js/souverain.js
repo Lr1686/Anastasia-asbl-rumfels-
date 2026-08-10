@@ -24,7 +24,7 @@ console.log("Légataire universelle : " + LEGATAIRE);
 // sont gérés selon votre volonté unique.
 
 // 🛡️ Sentinel: Secure transaction handler with debouncing and confirmation to prevent clickjacking/double-click spamming
-document.addEventListener("DOMContentLoaded", () => {
+const initTransactionHandler = () => {
     const goldBtn = document.querySelector(".gold-btn");
     if (goldBtn) {
         let isProcessing = false;
@@ -59,4 +59,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 3000);
         });
     }
-});
+};
+
+// 🛡️ Sentinel: Avoid initialization race conditions by checking document.readyState
+if (document.readyState === "interactive" || document.readyState === "complete") {
+    initTransactionHandler();
+} else {
+    document.addEventListener("DOMContentLoaded", initTransactionHandler);
+}
