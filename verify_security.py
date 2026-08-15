@@ -15,6 +15,7 @@ class QuietSimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 def run_server():
     handler = QuietSimpleHTTPRequestHandler
+    socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer(("", PORT), handler) as httpd:
         httpd.serve_forever()
 
@@ -77,7 +78,8 @@ def main():
             "encrypted-media=()", "execution-while-not-rendered=()", "execution-while-out-of-viewport=()",
             "fullscreen=()", "gamepad=()", "picture-in-picture=()", "screen-wake-lock=()",
             "web-share=()", "xr-spatial-tracking=()", "interest-cohort=()", "hid=()", "serial=()", "sync-xhr=()",
-            "bluetooth=()", "midi=()", "otp-credentials=()", "window-management=()"
+            "bluetooth=()", "midi=()", "otp-credentials=()", "window-management=()",
+            "clipboard-read=()", "clipboard-write=()", "compute-pressure=()", "idle-detection=()", "storage-access=()"
         ]
         for policy in expected_policies:
             if policy not in permissions_content:
