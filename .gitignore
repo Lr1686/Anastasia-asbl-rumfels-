@@ -28,3 +28,11 @@ secrets.json
 
 # System files
 .DS_Store
+
+# 🛡️ Sentinel: Python cache and bytecode files to prevent binary leakage
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
