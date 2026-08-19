@@ -7,9 +7,10 @@ if (self === top) {
     try {
         top.location = self.location;
     } catch (e) {
-        // Prevent execution of remaining scripts if redirection fails/is sandboxed
-        throw new Error("Clickjacking attempt blocked: sandboxed framing detected.");
+        // Navigation failed/blocked by sandboxed iframe
     }
+    // Always halt script execution and remain hidden when framed
+    throw new Error("Clickjacking attempt blocked: page execution halted inside frame.");
 }
 
 // SCRIPT DE SOUVERAINETÉ ABSOLUE

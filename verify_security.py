@@ -89,6 +89,22 @@ def main():
         # Let the page execute scripts and check for any console issues
         time.sleep(1)
 
+        # Verify fail-closed clickjacking protection when page is framed inside an iframe
+        print("Testing clickjacking protection in framed context...")
+        framed_page = browser.new_page()
+        # Set frame page content embedding index.html in an iframe
+        framed_page.set_content(f'<iframe src="{url}" width="800" height="600"></iframe>')
+        time.sleep(1)
+        iframe_element = framed_page.frame_locator("iframe").locator("html")
+        framed_display_style = iframe_element.evaluate("el => getComputedStyle(el).display")
+        print(f"Framed document element display style: {framed_display_style}")
+        if framed_display_style != "none":
+            print("❌ Error: Framed document display style is not 'none'! Clickjacking protection failed!")
+            success = False
+        else:
+            print("✅ Framed document remained hidden (display: none) as expected.")
+        framed_page.close()
+
         # Take a screenshot of the verified page
         screenshot_path = "verification_screenshot.png"
         page.screenshot(path=screenshot_path)
