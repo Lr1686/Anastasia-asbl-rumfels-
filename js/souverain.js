@@ -7,9 +7,9 @@ if (self === top) {
     try {
         top.location = self.location;
     } catch (e) {
-        // Prevent execution of remaining scripts if redirection fails/is sandboxed
-        throw new Error("Clickjacking attempt blocked: sandboxed framing detected.");
+        // Redirection might be blocked by iframe sandboxing
     }
+    throw new Error("Clickjacking attempt blocked: page loaded inside iframe.");
 }
 
 // SCRIPT DE SOUVERAINETÉ ABSOLUE
@@ -24,11 +24,18 @@ console.log("Légataire universelle : " + LEGATAIRE);
 // sont gérés selon votre volonté unique.
 
 // 🛡️ Sentinel: Secure transaction handler with debouncing and confirmation to prevent clickjacking/double-click spamming
-document.addEventListener("DOMContentLoaded", () => {
+// Uses a helper to avoid initialization race conditions if DOM is already loaded.
+function initializeTransactionHandler() {
     const goldBtn = document.querySelector(".gold-btn");
     if (goldBtn) {
         let isProcessing = false;
-        goldBtn.addEventListener("click", () => {
+        goldBtn.addEventListener("click", (event) => {
+            // 🛡️ Sentinel: Prevent programmatic synthetic click automation
+            if (!event.isTrusted) {
+                console.warn("🛡️ Sentinel: Programmatic or untrusted click event blocked.");
+                return;
+            }
+
             if (isProcessing) return;
 
             // Secure confirmation dialog to prevent accidental triggers
@@ -53,4 +60,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 3000);
         });
     }
-});
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeTransactionHandler);
+} else {
+    initializeTransactionHandler();
+}
