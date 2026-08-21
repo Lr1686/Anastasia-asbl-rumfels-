@@ -68,6 +68,15 @@ def main():
             print("❌ Error: 'trusted-types 'none'' is missing from Content-Security-Policy!")
             success = False
 
+        expected_csp_directives = [
+            "connect-src 'none'", "img-src 'none'", "font-src 'none'",
+            "frame-src 'none'", "media-src 'none'", "manifest-src 'none'", "worker-src 'none'"
+        ]
+        for directive in expected_csp_directives:
+            if directive not in csp_content:
+                print(f"❌ Error: Missing expected CSP directive '{directive}'!")
+                success = False
+
         # Verify Permissions-Policy content
         permissions_content = page.locator("meta[http-equiv='Permissions-Policy']").get_attribute("content")
         print(f"Found Permissions-Policy: {permissions_content}")
