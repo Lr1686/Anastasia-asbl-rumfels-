@@ -30,34 +30,44 @@ function initializeTransactionHandler() {
     if (goldBtn) {
         let isProcessing = false;
         goldBtn.addEventListener("click", (event) => {
-            // 🛡️ Sentinel: Prevent programmatic synthetic click automation
-            if (!event.isTrusted) {
-                console.warn("🛡️ Sentinel: Programmatic or untrusted click event blocked.");
-                return;
+            try {
+                // 🛡️ Sentinel: Prevent programmatic synthetic click automation
+                if (!event || !event.isTrusted) {
+                    console.warn("🛡️ Sentinel: Programmatic or untrusted click event blocked.");
+                    return;
+                }
+
+                if (isProcessing) return;
+
+                // 🛡️ Sentinel: Fail-closed confirmation check in case confirm dialogs are blocked/disabled
+                if (typeof window.confirm !== "function") {
+                    console.warn("🛡️ Sentinel: Confirmation dialog unavailable; transaction aborted.");
+                    return;
+                }
+
+                // Secure confirmation dialog to prevent accidental triggers
+                const confirmed = window.confirm("Confirmez-vous le déclenchement de la transaction souveraine ?");
+                if (!confirmed) {
+                    console.log("🛡️ Sentinel: Transaction annulée par l'utilisateur.");
+                    return;
+                }
+
+                isProcessing = true;
+                goldBtn.disabled = true;
+                const originalText = goldBtn.textContent;
+                goldBtn.textContent = "TRANSACTION EN COURS...";
+
+                console.log("🛡️ Sentinel: Transaction souveraine initiée de manière sécurisée.");
+
+                // Cooldown / debouncing to prevent spamming
+                setTimeout(() => {
+                    goldBtn.textContent = originalText;
+                    goldBtn.disabled = false;
+                    isProcessing = false;
+                }, 3000);
+            } catch (err) {
+                console.warn("🛡️ Sentinel: Error during transaction processing; failing securely.");
             }
-
-            if (isProcessing) return;
-
-            // Secure confirmation dialog to prevent accidental triggers
-            const confirmed = window.confirm("Confirmez-vous le déclenchement de la transaction souveraine ?");
-            if (!confirmed) {
-                console.log("🛡️ Sentinel: Transaction annulée par l'utilisateur.");
-                return;
-            }
-
-            isProcessing = true;
-            goldBtn.disabled = true;
-            const originalText = goldBtn.textContent;
-            goldBtn.textContent = "TRANSACTION EN COURS...";
-
-            console.log("🛡️ Sentinel: Transaction souveraine initiée de manière sécurisée.");
-
-            // Cooldown / debouncing to prevent spamming
-            setTimeout(() => {
-                goldBtn.textContent = originalText;
-                goldBtn.disabled = false;
-                isProcessing = false;
-            }, 3000);
         });
     }
 }
