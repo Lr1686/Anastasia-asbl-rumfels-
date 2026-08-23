@@ -1,15 +1,23 @@
 "use strict";
 
 /* 🛡️ Sentinel: Fail-closed clickjacking protection */
-if (self === top) {
-    document.documentElement.style.display = 'block';
-} else {
-    try {
-        top.location = self.location;
-    } catch (e) {
-        // Redirection might be blocked by iframe sandboxing
+try {
+    if (self === top && window.frameElement === null) {
+        document.documentElement.style.display = 'block';
+    } else {
+        try {
+            top.location = self.location;
+        } catch (e) {
+            // Redirection might be blocked by iframe sandboxing
+        }
+        throw new Error("Clickjacking attempt blocked: page loaded inside iframe.");
     }
-    throw new Error("Clickjacking attempt blocked: page loaded inside iframe.");
+} catch (err) {
+    if (err.message && err.message.startsWith("Clickjacking attempt blocked")) {
+        throw err;
+    }
+    // Handle cross-origin SecurityError when checking window.frameElement
+    throw new Error("Clickjacking attempt blocked: cross-origin frame detected.");
 }
 
 // SCRIPT DE SOUVERAINETÉ ABSOLUE
@@ -31,7 +39,11 @@ function initializeTransactionHandler() {
         let isProcessing = false;
         goldBtn.addEventListener("click", (event) => {
             try {
-                // 🛡️ Sentinel: Prevent programmatic synthetic click automation
+                // 🛡️ Sentinel: Prevent programmatic synthetic click automation & default actions
+                if (event && typeof event.preventDefault === "function") {
+                    event.preventDefault();
+                }
+
                 if (!event || !event.isTrusted) {
                     console.warn("🛡️ Sentinel: Programmatic or untrusted click event blocked.");
                     return;
