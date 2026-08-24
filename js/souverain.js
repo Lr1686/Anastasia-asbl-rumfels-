@@ -1,7 +1,15 @@
 "use strict";
 
 /* 🛡️ Sentinel: Fail-closed clickjacking protection */
-if (self === top) {
+let isFramed = true;
+try {
+    isFramed = (self !== top) || (window.frameElement !== null);
+} catch (e) {
+    // Access restriction (e.g. SecurityError in cross-origin iframe) means page is framed
+    isFramed = true;
+}
+
+if (!isFramed) {
     document.documentElement.style.display = 'block';
 } else {
     try {
