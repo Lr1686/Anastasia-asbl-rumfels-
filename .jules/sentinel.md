@@ -67,3 +67,8 @@
 **Vulnerability:** Core JS failure via race condition blocks clickjacking protection; missing Permissions-Policy rules.
 **Learning:** Checking DOMContentLoaded without readyState checks can lead to events failing to fire if a fast connection or service worker resolves the DOM before handler registration. Because of client-side fail-closed protections, any script block or silent failure leaves the page blank and unuseable. Additionally, modern browsers support security policies for cohort tracking, hardware interface protocols, and synchronous APIs.
 **Prevention:** Check `document.readyState` and immediately execute or register DOM content listeners accordingly. Periodically audit and expand the client-meta `Permissions-Policy` blocklist with `interest-cohort=()`, `hid=()`, `serial=()`, and `sync-xhr=()`.
+
+## 2026-08-15 - Granular CSP Attribute Restrictions and Robust Frame Checking
+**Vulnerability:** Weakness in client-side clickjacking checks when framed in same-origin contexts, and potential attribute-based inline script/style injection.
+**Learning:** Checking `(self !== top) || (frameElement !== null)` inside a fail-closed `try...catch` block prevents frame-based bypasses. Additionally, adding `script-src-attr 'none'` and `style-src-attr 'none'` to the CSP explicitly blocks inline event handlers and inline style attributes without affecting externalized assets.
+**Prevention:** Always verify `window.frameElement` alongside `window.top` in fail-closed clickjacking protection, and include `script-src-attr 'none'` and `style-src-attr 'none'` in strict CSP configurations.

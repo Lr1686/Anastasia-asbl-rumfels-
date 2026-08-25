@@ -1,11 +1,19 @@
 "use strict";
 
-/* 🛡️ Sentinel: Fail-closed clickjacking protection */
-if (self === top) {
+/* 🛡️ Sentinel: Fail-closed clickjacking protection verifying frame status and frameElement */
+let isFramed = true;
+try {
+    isFramed = (window.self !== window.top) || (window.frameElement !== null);
+} catch (e) {
+    // Accessing window.top or window.frameElement across origins throws SecurityError
+    isFramed = true;
+}
+
+if (!isFramed) {
     document.documentElement.style.display = 'block';
 } else {
     try {
-        top.location = self.location;
+        if (window.top) window.top.location = window.self.location;
     } catch (e) {
         // Redirection might be blocked by iframe sandboxing
     }
