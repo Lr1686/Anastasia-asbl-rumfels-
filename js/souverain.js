@@ -38,10 +38,12 @@ function initializeTransactionHandler() {
                 }
 
                 if (isProcessing) return;
+                isProcessing = true;
 
                 // 🛡️ Sentinel: Fail-closed confirmation check in case confirm dialogs are blocked/disabled
                 if (typeof window.confirm !== "function") {
                     console.warn("🛡️ Sentinel: Confirmation dialog unavailable; transaction aborted.");
+                    isProcessing = false;
                     return;
                 }
 
@@ -49,10 +51,10 @@ function initializeTransactionHandler() {
                 const confirmed = window.confirm("Confirmez-vous le déclenchement de la transaction souveraine ?");
                 if (!confirmed) {
                     console.log("🛡️ Sentinel: Transaction annulée par l'utilisateur.");
+                    isProcessing = false;
                     return;
                 }
 
-                isProcessing = true;
                 goldBtn.disabled = true;
                 const originalText = goldBtn.textContent;
                 goldBtn.textContent = "TRANSACTION EN COURS...";
