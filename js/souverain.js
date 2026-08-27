@@ -1,12 +1,16 @@
 "use strict";
 
 /* 🛡️ Sentinel: Fail-closed clickjacking protection */
-if (self === top) {
-    document.documentElement.style.display = 'block';
-} else {
+try {
+    if (self === top && window.frameElement === null) {
+        document.documentElement.style.display = 'block';
+    } else {
+        throw new Error("Clickjacking attempt blocked: page loaded inside iframe.");
+    }
+} catch (e) {
     try {
-        top.location = self.location;
-    } catch (e) {
+        if (top) top.location = self.location;
+    } catch (redirectErr) {
         // Redirection might be blocked by iframe sandboxing
     }
     throw new Error("Clickjacking attempt blocked: page loaded inside iframe.");
@@ -39,9 +43,13 @@ function initializeTransactionHandler() {
 
                 if (isProcessing) return;
 
+                // Lock state early to prevent re-entrancy or double triggers before modal display
+                isProcessing = true;
+
                 // 🛡️ Sentinel: Fail-closed confirmation check in case confirm dialogs are blocked/disabled
                 if (typeof window.confirm !== "function") {
                     console.warn("🛡️ Sentinel: Confirmation dialog unavailable; transaction aborted.");
+                    isProcessing = false;
                     return;
                 }
 
@@ -49,10 +57,10 @@ function initializeTransactionHandler() {
                 const confirmed = window.confirm("Confirmez-vous le déclenchement de la transaction souveraine ?");
                 if (!confirmed) {
                     console.log("🛡️ Sentinel: Transaction annulée par l'utilisateur.");
+                    isProcessing = false;
                     return;
                 }
 
-                isProcessing = true;
                 goldBtn.disabled = true;
                 const originalText = goldBtn.textContent;
                 goldBtn.textContent = "TRANSACTION EN COURS...";
@@ -67,6 +75,7 @@ function initializeTransactionHandler() {
                 }, 3000);
             } catch (err) {
                 console.warn("🛡️ Sentinel: Error during transaction processing; failing securely.");
+                isProcessing = false;
             }
         });
     }
