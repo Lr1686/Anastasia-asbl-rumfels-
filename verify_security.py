@@ -79,7 +79,8 @@ def main():
             "fullscreen=()", "gamepad=()", "picture-in-picture=()", "screen-wake-lock=()",
             "web-share=()", "xr-spatial-tracking=()", "interest-cohort=()", "hid=()", "serial=()", "sync-xhr=()",
             "bluetooth=()", "midi=()", "otp-credentials=()", "window-management=()",
-            "clipboard-read=()", "clipboard-write=()", "compute-pressure=()", "idle-detection=()", "storage-access=()"
+            "clipboard-read=()", "clipboard-write=()", "compute-pressure=()", "idle-detection=()", "storage-access=()",
+            "keyboard-map=()", "captured-surface-control=()", "media-playback-while-not-visible=()"
         ]
         for policy in expected_policies:
             if policy not in permissions_content:
