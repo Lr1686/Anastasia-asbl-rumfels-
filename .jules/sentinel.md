@@ -67,3 +67,8 @@
 **Vulnerability:** Core JS failure via race condition blocks clickjacking protection; missing Permissions-Policy rules.
 **Learning:** Checking DOMContentLoaded without readyState checks can lead to events failing to fire if a fast connection or service worker resolves the DOM before handler registration. Because of client-side fail-closed protections, any script block or silent failure leaves the page blank and unuseable. Additionally, modern browsers support security policies for cohort tracking, hardware interface protocols, and synchronous APIs.
 **Prevention:** Check `document.readyState` and immediately execute or register DOM content listeners accordingly. Periodically audit and expand the client-meta `Permissions-Policy` blocklist with `interest-cohort=()`, `hid=()`, `serial=()`, and `sync-xhr=()`.
+
+## 2026-08-14 - Robust Frame Inspection and Exception Handling for Fail-Closed Clickjacking Protection
+**Vulnerability:** Potential clickjacking bypass or script crash in strict or cross-origin iframe sandboxes.
+**Learning:** Checking `self === top` alone can fail to detect framing if `window.frameElement` is present in same-origin contexts, or can throw an unhandled `SecurityError` in restricted cross-origin contexts, potentially halting script execution before fail-closed logic runs.
+**Prevention:** Always inspect both `self === top` and `window.frameElement === null` inside a try-catch block to handle DOM security exceptions gracefully and keep the UI hidden when framed.
