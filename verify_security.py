@@ -68,6 +68,10 @@ def main():
             print("❌ Error: 'trusted-types 'none'' is missing from Content-Security-Policy!")
             success = False
 
+        if "script-src-attr 'none'" not in csp_content or "style-src-attr 'none'" not in csp_content:
+            print("❌ Error: Attribute-level source directives ('script-src-attr 'none'', 'style-src-attr 'none'') are missing from Content-Security-Policy!")
+            success = False
+
         # Verify Permissions-Policy content
         permissions_content = page.locator("meta[http-equiv='Permissions-Policy']").get_attribute("content")
         print(f"Found Permissions-Policy: {permissions_content}")
