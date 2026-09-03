@@ -1,7 +1,14 @@
 "use strict";
 
-/* 🛡️ Sentinel: Fail-closed clickjacking protection */
-if (self === top) {
+/* 🛡️ Sentinel: Fail-closed clickjacking protection with cross-origin & same-origin framing checks */
+let isFramed = false;
+try {
+    isFramed = (self !== top) || (window.frameElement !== null);
+} catch (e) {
+    isFramed = true;
+}
+
+if (!isFramed) {
     document.documentElement.style.display = 'block';
 } else {
     try {
