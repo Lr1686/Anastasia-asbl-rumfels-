@@ -68,6 +68,14 @@ def main():
             print("❌ Error: 'trusted-types 'none'' is missing from Content-Security-Policy!")
             success = False
 
+        expected_csp_directives = [
+            "connect-src 'none'", "img-src 'none'", "font-src 'none'",
+            "frame-src 'none'", "media-src 'none'", "manifest-src 'none'", "worker-src 'none'"
+        ]
+        for directive in expected_csp_directives:
+            if directive not in csp_content:
+                print(f"❌ Error: Missing expected CSP directive '{directive}'!")
+                success = False
         if "script-src-attr 'none'" not in csp_content or "style-src-attr 'none'" not in csp_content:
             print("❌ Error: 'script-src-attr 'none'' or 'style-src-attr 'none'' is missing from Content-Security-Policy!")
             success = False
