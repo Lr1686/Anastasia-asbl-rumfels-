@@ -1,22 +1,22 @@
 "use strict";
 
-/* 🛡️ Sentinel: Fail-closed clickjacking protection with cross-origin exception safety */
+/* 🛡️ Sentinel: Fail-closed clickjacking protection with cross-origin safety */
 try {
-    if (self === top && window.frameElement === null) {
+    if (window.self === window.top && window.frameElement === null) {
         document.documentElement.style.display = 'block';
     } else {
         try {
-            top.location = self.location;
+            window.top.location = window.self.location;
         } catch (e) {
             // Redirection might be blocked by iframe sandboxing
         }
         throw new Error("Clickjacking attempt blocked: page loaded inside iframe.");
     }
 } catch (e) {
-    if (document.documentElement) {
-        document.documentElement.style.display = 'none';
+    if (e.message && e.message.includes("Clickjacking attempt blocked")) {
+        throw e;
     }
-    throw new Error("Clickjacking attempt or frame isolation error blocked.");
+    throw new Error("Clickjacking attempt blocked: cross-origin frame access restricted.");
 }
 
 // SCRIPT DE SOUVERAINETÉ ABSOLUE
