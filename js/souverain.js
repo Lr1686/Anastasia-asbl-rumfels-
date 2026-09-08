@@ -1,15 +1,19 @@
 "use strict";
 
 /* 🛡️ Sentinel: Fail-closed clickjacking protection */
-if (self === top) {
-    document.documentElement.style.display = 'block';
-} else {
-    try {
-        top.location = self.location;
-    } catch (e) {
-        // Prevent execution of remaining scripts if redirection fails/is sandboxed
-        throw new Error("Clickjacking attempt blocked: sandboxed framing detected.");
+try {
+    if (self === top && window.frameElement === null) {
+        document.documentElement.style.display = 'block';
+    } else {
+        throw new Error("Clickjacking attempt blocked: page loaded inside iframe.");
     }
+} catch (e) {
+    try {
+        if (top) top.location = self.location;
+    } catch (redirectErr) {
+        // Redirection might be blocked by iframe sandboxing
+    }
+    throw new Error("Clickjacking attempt blocked: page loaded inside iframe.");
 }
 
 // SCRIPT DE SOUVERAINETÉ ABSOLUE
@@ -24,33 +28,61 @@ console.log("Légataire universelle : " + LEGATAIRE);
 // sont gérés selon votre volonté unique.
 
 // 🛡️ Sentinel: Secure transaction handler with debouncing and confirmation to prevent clickjacking/double-click spamming
-document.addEventListener("DOMContentLoaded", () => {
+// Uses a helper to avoid initialization race conditions if DOM is already loaded.
+function initializeTransactionHandler() {
     const goldBtn = document.querySelector(".gold-btn");
     if (goldBtn) {
         let isProcessing = false;
-        goldBtn.addEventListener("click", () => {
-            if (isProcessing) return;
+        goldBtn.addEventListener("click", (event) => {
+            try {
+                // 🛡️ Sentinel: Prevent programmatic synthetic click automation
+                if (!event || !event.isTrusted) {
+                    console.warn("🛡️ Sentinel: Programmatic or untrusted click event blocked.");
+                    return;
+                }
 
-            // Secure confirmation dialog to prevent accidental triggers
-            const confirmed = window.confirm("Confirmez-vous le déclenchement de la transaction souveraine ?");
-            if (!confirmed) {
-                console.log("🛡️ Sentinel: Transaction annulée par l'utilisateur.");
-                return;
-            }
+                if (isProcessing) return;
 
-            isProcessing = true;
-            goldBtn.disabled = true;
-            const originalText = goldBtn.textContent;
-            goldBtn.textContent = "TRANSACTION EN COURS...";
+                // Lock state early to prevent re-entrancy or double triggers before modal display
+                isProcessing = true;
 
-            console.log("🛡️ Sentinel: Transaction souveraine initiée de manière sécurisée.");
+                // 🛡️ Sentinel: Fail-closed confirmation check in case confirm dialogs are blocked/disabled
+                if (typeof window.confirm !== "function") {
+                    console.warn("🛡️ Sentinel: Confirmation dialog unavailable; transaction aborted.");
+                    isProcessing = false;
+                    return;
+                }
 
-            // Cooldown / debouncing to prevent spamming
-            setTimeout(() => {
-                goldBtn.textContent = originalText;
-                goldBtn.disabled = false;
+                // Secure confirmation dialog to prevent accidental triggers
+                const confirmed = window.confirm("Confirmez-vous le déclenchement de la transaction souveraine ?");
+                if (!confirmed) {
+                    console.log("🛡️ Sentinel: Transaction annulée par l'utilisateur.");
+                    isProcessing = false;
+                    return;
+                }
+
+                goldBtn.disabled = true;
+                const originalText = goldBtn.textContent;
+                goldBtn.textContent = "TRANSACTION EN COURS...";
+
+                console.log("🛡️ Sentinel: Transaction souveraine initiée de manière sécurisée.");
+
+                // Cooldown / debouncing to prevent spamming
+                setTimeout(() => {
+                    goldBtn.textContent = originalText;
+                    goldBtn.disabled = false;
+                    isProcessing = false;
+                }, 3000);
+            } catch (err) {
+                console.warn("🛡️ Sentinel: Error during transaction processing; failing securely.");
                 isProcessing = false;
-            }, 3000);
+            }
         });
     }
-});
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeTransactionHandler);
+} else {
+    initializeTransactionHandler();
+}
