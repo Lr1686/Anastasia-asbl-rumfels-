@@ -26,8 +26,15 @@ secrets.json
 *.crt
 *.csr
 
-# System files
+# System and log files
 .DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary test/verification artifacts
+verification_screenshot.png
 
 # Python bytecode and cache directories
 __pycache__/

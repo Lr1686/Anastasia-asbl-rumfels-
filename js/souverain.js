@@ -52,14 +52,16 @@ function initializeTransactionHandler() {
                     return;
                 }
 
+                // 🛡️ Sentinel: Lock processing state before dialog prompt to prevent re-entrancy / race condition
+                isProcessing = true;
+
                 // Secure confirmation dialog to prevent accidental triggers
                 const confirmed = window.confirm("Confirmez-vous le déclenchement de la transaction souveraine ?");
                 if (!confirmed) {
                     console.log("🛡️ Sentinel: Transaction annulée par l'utilisateur.");
+                    isProcessing = false;
                     return;
                 }
-
-                isProcessing = true;
                 goldBtn.disabled = true;
                 const originalText = goldBtn.textContent;
                 goldBtn.textContent = "TRANSACTION EN COURS...";
