@@ -69,7 +69,7 @@ def main():
             success = False
 
         if "script-src-attr 'none'" not in csp_content or "style-src-attr 'none'" not in csp_content:
-            print("❌ Error: Attribute-level source directives ('script-src-attr 'none'', 'style-src-attr 'none'') are missing from Content-Security-Policy!")
+            print("❌ Error: 'script-src-attr 'none'' or 'style-src-attr 'none'' is missing from Content-Security-Policy!")
             success = False
 
         # Verify Permissions-Policy content
