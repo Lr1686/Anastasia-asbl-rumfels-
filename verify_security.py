@@ -62,7 +62,7 @@ def main():
             success = False
 
         # Verify CSP meta tag content
-        csp_content = page.locator("meta[http-equiv='Content-Security-Policy']").get_attribute("content")
+        csp_content = page.locator("meta[http-equiv='Content-Security-Policy']").first.get_attribute("content")
         print(f"Found Content-Security-Policy: {csp_content}")
         if "trusted-types 'none'" not in csp_content:
             print("❌ Error: 'trusted-types 'none'' is missing from Content-Security-Policy!")
