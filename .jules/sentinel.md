@@ -72,3 +72,8 @@
 **Vulnerability:** Potential leakage of diagnostic/editor files in version control and fallback-reliance in Content Security Policy.
 **Learning:** Default fallback mechanisms in browsers might have edge-case issues or non-standard behavior for experimental directives, making explicit 'none' declarations in CSP a critical defense-in-depth practice. Additionally, developer environments often generate temporary diagnostic logs or IDE metadata that can accidentally be committed, exposing local system paths or credentials.
 **Prevention:** Explicitly declare all unused resource-fetch directives as 'none' in the CSP, and maintain a strict, comprehensive .gitignore that blocks diagnostic logs (*.log, npm-debug.log*, etc.) and IDE/editor configurations (.idea/, .vscode/).
+
+## 2026-08-18 - Script Integrity and Meta Tag Deduplication
+**Vulnerability:** Syntax errors in fail-closed clickjacking scripts and duplicate security meta tags causing site availability and verification failure.
+**Learning:** In a fail-closed clickjacking architecture where CSS hides the UI by default (`html { display: none; }`), any syntax error or SRI hash mismatch in the core JavaScript asset completely breaks script execution, leaving the site permanently blank. Furthermore, duplicate CSP/Permissions-Policy meta tags in HTML create strict-mode locator conflicts in automated testing.
+**Prevention:** Always ensure core JS assets are syntactically clean, recalculate and synchronize SRI hashes on `index.html`, and maintain single, deduplicated security meta tag declarations.
