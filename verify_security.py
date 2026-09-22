@@ -68,6 +68,18 @@ def main():
             print("❌ Error: 'trusted-types 'none'' is missing from Content-Security-Policy!")
             success = False
 
+        expected_csp_directives = [
+            "connect-src 'none'", "img-src 'none'", "font-src 'none'",
+            "frame-src 'none'", "media-src 'none'", "manifest-src 'none'", "worker-src 'none'"
+        ]
+        for directive in expected_csp_directives:
+            if directive not in csp_content:
+                print(f"❌ Error: Missing expected CSP directive '{directive}'!")
+                success = False
+        if "script-src-attr 'none'" not in csp_content or "style-src-attr 'none'" not in csp_content:
+            print("❌ Error: 'script-src-attr 'none'' or 'style-src-attr 'none'' is missing from Content-Security-Policy!")
+            success = False
+
         # Verify Permissions-Policy content
         permissions_content = page.locator("meta[http-equiv='Permissions-Policy']").get_attribute("content")
         print(f"Found Permissions-Policy: {permissions_content}")
@@ -79,7 +91,8 @@ def main():
             "fullscreen=()", "gamepad=()", "picture-in-picture=()", "screen-wake-lock=()",
             "web-share=()", "xr-spatial-tracking=()", "interest-cohort=()", "hid=()", "serial=()", "sync-xhr=()",
             "bluetooth=()", "midi=()", "otp-credentials=()", "window-management=()",
-            "clipboard-read=()", "clipboard-write=()", "compute-pressure=()", "idle-detection=()", "storage-access=()"
+            "clipboard-read=()", "clipboard-write=()", "compute-pressure=()", "idle-detection=()", "storage-access=()",
+            "keyboard-map=()", "captured-surface-control=()", "media-playback-while-not-visible=()", "speaker-selection=()"
         ]
         for policy in expected_policies:
             if policy not in permissions_content:

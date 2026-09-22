@@ -67,3 +67,8 @@
 **Vulnerability:** Core JS failure via race condition blocks clickjacking protection; missing Permissions-Policy rules.
 **Learning:** Checking DOMContentLoaded without readyState checks can lead to events failing to fire if a fast connection or service worker resolves the DOM before handler registration. Because of client-side fail-closed protections, any script block or silent failure leaves the page blank and unuseable. Additionally, modern browsers support security policies for cohort tracking, hardware interface protocols, and synchronous APIs.
 **Prevention:** Check `document.readyState` and immediately execute or register DOM content listeners accordingly. Periodically audit and expand the client-meta `Permissions-Policy` blocklist with `interest-cohort=()`, `hid=()`, `serial=()`, and `sync-xhr=()`.
+
+## 2026-08-14 - Security Baseline Hardening and Fallback Mitigation
+**Vulnerability:** Potential leakage of diagnostic/editor files in version control and fallback-reliance in Content Security Policy.
+**Learning:** Default fallback mechanisms in browsers might have edge-case issues or non-standard behavior for experimental directives, making explicit 'none' declarations in CSP a critical defense-in-depth practice. Additionally, developer environments often generate temporary diagnostic logs or IDE metadata that can accidentally be committed, exposing local system paths or credentials.
+**Prevention:** Explicitly declare all unused resource-fetch directives as 'none' in the CSP, and maintain a strict, comprehensive .gitignore that blocks diagnostic logs (*.log, npm-debug.log*, etc.) and IDE/editor configurations (.idea/, .vscode/).
