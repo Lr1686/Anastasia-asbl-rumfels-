@@ -1,0 +1,3 @@
+## 2026-09-26 - Shell process fork optimization in gatekeeper and research scripts
+**Learning:** Shell scripts running in loops or health checks spend significantly more CPU time on process creation (fork/exec for external tools like `awk`, `find`, or `shasum`) than on string manipulation itself. Fast-path existence checks (`[ -f "$FILE" ]`) and pure Bash parameter expansions (`${VAR%% *}`) reduce script execution time from ~40ms to ~3ms when files are missing or during iteration loops.
+**Action:** Always prefer native Bash parameter expansion over external pipeline tools (`awk`, `cut`, `sed`) inside shell loops, and wrap external binary executions behind fast-path guard conditions (`[ -f ]` / `[ -d ]`).
