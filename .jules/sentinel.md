@@ -72,3 +72,8 @@
 **Vulnerability:** Potential leakage of diagnostic/editor files in version control and fallback-reliance in Content Security Policy.
 **Learning:** Default fallback mechanisms in browsers might have edge-case issues or non-standard behavior for experimental directives, making explicit 'none' declarations in CSP a critical defense-in-depth practice. Additionally, developer environments often generate temporary diagnostic logs or IDE metadata that can accidentally be committed, exposing local system paths or credentials.
 **Prevention:** Explicitly declare all unused resource-fetch directives as 'none' in the CSP, and maintain a strict, comprehensive .gitignore that blocks diagnostic logs (*.log, npm-debug.log*, etc.) and IDE/editor configurations (.idea/, .vscode/).
+
+## 2026-08-18 - SRI Synchronization and Meta-Header Consolidation
+**Vulnerability:** Subresource Integrity hash mismatch and duplicate CSP/Permissions-Policy meta tags causing script execution blocking and strict-mode test failures.
+**Learning:** Script modifications without immediate SRI hash updates trigger browser SRI blocks, which under client-side fail-closed clickjacking protection (`html { display: none; }`) leads to complete UI availability lockup. Furthermore, duplicate CSP and Permissions-Policy meta tags create ambiguity and cause Playwright DOM query strict mode violations.
+**Prevention:** Always unify CSP and Permissions-Policy into single meta tags and synchronize SRI hashes immediately upon modifying JS/CSS assets.
