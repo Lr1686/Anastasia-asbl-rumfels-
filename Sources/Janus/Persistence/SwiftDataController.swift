@@ -3,22 +3,22 @@ import Foundation
 import CryptoKit
 
 @Model
-final class JanusMemory {
-    var timestamp: Date
-    var contextHash: String
-    var payload: Data
-    var frequencyTag: String = "12_ALPHA"
+public final class JanusMemory {
+    public var timestamp: Date
+    public var contextHash: String
+    public var payload: Data
+    public var frequencyTag: String = "12_ALPHA"
     
-    init(timestamp: Date = .now, contextHash: String, payload: Data) {
+    public init(timestamp: Date = .now, contextHash: String, payload: Data) {
         self.timestamp = timestamp
         self.contextHash = contextHash
         self.payload = payload
     }
 }
 
-actor JanusDataController {
+public actor JanusDataController {
     private let container: ModelContainer
-    init() {
+    public init() {
         let schema = Schema([JanusMemory.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {
