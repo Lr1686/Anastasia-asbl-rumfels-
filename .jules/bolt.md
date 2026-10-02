@@ -1,0 +1,3 @@
+## 2026-09-04 - Fast-path file verification and subshell avoidance in gatekeeper.sh
+**Learning:** In shell gatekeeper scripts, attempting external hash operations (`shasum`) without verifying file existence leads to unnecessary process forks, stderr noise, and latency. Additionally, piping `shasum` output into `awk` spawns an extra process when Bash parameter expansion (`${RAW_OUTPUT%% *}`) can extract the hash in-process.
+**Action:** Always check file existence with `[ -f "$TARGET_FILE" ]` before invoking external hashing tools, quote file paths with spaces, and use parameter expansion instead of piping to `awk`.
