@@ -1,17 +1,5 @@
 "use strict";
 
-/* 🛡️ Sentinel: Fail-closed clickjacking protection */
-try {
-    if (self === top && window.frameElement === null) {
-        document.documentElement.style.display = 'block';
-    } else {
-        throw new Error("Clickjacking attempt blocked: page loaded inside iframe.");
-    }
-} catch (e) {
-    try {
-        if (top) top.location = self.location;
-    } catch (redirectErr) {
-        // Redirection might be blocked by iframe sandboxing
 /* 🛡️ Sentinel: Fail-closed clickjacking protection with cross-origin safety */
 try {
     if (window.self === window.top && window.frameElement === null) {
