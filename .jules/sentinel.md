@@ -17,26 +17,28 @@
 
 ## 2026-07-10 - Integrity Verification and CSP Hardening
 **Vulnerability:** Risk of unauthorized asset modification and overly permissive default CSP.
-**Learning:** Static sites that claim to be "unattackable" should employ Subresource Integrity (SRI) to guarantee that only verified assets are executed. Furthermore, a `default-src 'self'` policy is still more permissive than necessary; `default-src 'none'` is the true secure baseline for static pages with known dependencies.
+**Learning:** Static sites that claim to be "unattackable" should employ Subresource Integrity (SRI) to guarantee that only verified assets are executed. Furthermore, a `default-src 'none'` policy is still more permissive than necessary; `default-src 'none'` is the true secure baseline for static pages with known dependencies.
 **Prevention:** Implement SRI hashes for all external scripts and styles. Harden the CSP by setting `default-src 'none'` and explicitly allowing only trusted local assets. Use `Permissions-Policy` to disable unused browser features (camera, mic, etc.) by default.
 
 ## 2026-07-11 - Fail-Closed Clickjacking Protection and CSP Hardening
 **Vulnerability:** Potential for UI redress attacks (clickjacking) and DOM-based XSS.
 **Learning:** Standard "frame-busting" scripts can be bypassed or disabled. A "fail-closed" approach—where the UI is hidden by default and only revealed if the page is not framed—provides much stronger protection. Furthermore, enabling Trusted Types in the CSP provides a modern defense against DOM XSS.
 **Prevention:** Implement `html { display: none; }` in CSS and reveal it via JS only after verifying `self === top`. Harden CSP with `require-trusted-types-for 'script'` and expand `Permissions-Policy` to disable all unused browser features.
+
 ## 2026-07-12 - Fail-Closed Clickjacking Protection and Trusted Types
 **Vulnerability:** Standard frame-busting scripts can be bypassed; lack of DOM XSS defense-in-depth.
 **Learning:** Traditional clickjacking protection (like `if (self !== top) top.location = self.location`) can sometimes be mitigated by a framing page using the `sandbox` attribute. A "fail-closed" approach where the UI is hidden by default via CSS and only revealed via JS after a successful `self === top` check is much more robust. Additionally, adding `require-trusted-types-for 'script'` to the CSP helps prevent DOM-based XSS by requiring developers to use Trusted Types policies instead of dangerous sinks.
 **Prevention:** Use `html { display: none; }` in CSS and `if (self === top) document.documentElement.style.display = 'block';` in JS. Always include `require-trusted-types-for 'script'` in CSP for modern browser protection.
 
-## 2026-07-16 - CSP Hardening and JS Strict Mode
-**Vulnerability:** Potential for DOM XSS via Trusted Types and common JS pitfalls.
-**Learning:** Adding `trusted-types 'none'` to CSP (when used with `require-trusted-types-for 'script'`) completely blocks the creation of any Trusted Types policies, providing the highest level of defense-in-depth against DOM XSS for applications that don't need them. Enabling `"use strict";` in JS prevents accidental global variables and other insecure practices.
-**Prevention:** Use `trusted-types 'none'` in CSP for static sites with no dynamic policy needs. Always enforce `"use strict";` in core JS assets.
 ## 2026-07-14 - Attack Surface Reduction and Header Hardening
 **Vulnerability:** Unused legacy assets and missing modern security headers (Trusted Types 'none', expanded Permissions-Policy).
 **Learning:** Maintaining unused code increases the attack surface unnecessarily. Modern headers like `trusted-types 'none'` and comprehensive `Permissions-Policy` provide additional layers of defense-in-depth even for static sites.
 **Prevention:** Regularly audit for and remove unused assets. Implement restrictive modern security headers by default, including `trusted-types 'none'` to block DOM-based XSS injection sinks.
+
+## 2026-07-16 - CSP Hardening and JS Strict Mode
+**Vulnerability:** Potential for DOM XSS via Trusted Types and common JS pitfalls.
+**Learning:** Adding `trusted-types 'none'` to CSP (when used with `require-trusted-types-for 'script'`) completely blocks the creation of any Trusted Types policies, providing the highest level of defense-in-depth against DOM XSS for applications that don't need them. Enabling `"use strict";` in JS prevents accidental global variables and other insecure practices.
+**Prevention:** Use `trusted-types 'none'` in CSP for static sites with no dynamic policy needs. Always enforce `"use strict";` in core JS assets.
 
 ## 2026-07-18 - Strict CSP Style compliance and Inline Styles Elimination
 **Vulnerability:** Strict Content Security Policy style-src 'self' blocked by inline styles.
@@ -72,3 +74,8 @@
 **Vulnerability:** Potential leakage of diagnostic/editor files in version control and fallback-reliance in Content Security Policy.
 **Learning:** Default fallback mechanisms in browsers might have edge-case issues or non-standard behavior for experimental directives, making explicit 'none' declarations in CSP a critical defense-in-depth practice. Additionally, developer environments often generate temporary diagnostic logs or IDE metadata that can accidentally be committed, exposing local system paths or credentials.
 **Prevention:** Explicitly declare all unused resource-fetch directives as 'none' in the CSP, and maintain a strict, comprehensive .gitignore that blocks diagnostic logs (*.log, npm-debug.log*, etc.) and IDE/editor configurations (.idea/, .vscode/).
+
+## 2026-08-18 - Syntax Corruption in Fail-Closed Scripts and Security Meta Tag Deduplication
+**Vulnerability:** Malformed JavaScript code syntax preventing execution of fail-closed clickjacking protection; duplicate security meta tags causing automation failures.
+**Learning:** Syntax corruption or malformed nested blocks in core JavaScript files cause script execution to abort silently. Under client-side fail-closed security controls (where `html { display: none; }` is un-hidden by JS), script failures result in complete site unavailability. Furthermore, duplicate security meta tags in HTML lead to ambiguity and strict-mode element resolution errors in automated verification suites.
+**Prevention:** Rigorously validate JavaScript syntax and deduplicate meta tags in HTML. Always synchronize SRI SHA-384 hashes whenever core script assets are modified.
