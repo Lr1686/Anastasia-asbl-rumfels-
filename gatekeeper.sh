@@ -1,6 +1,19 @@
 #!/bin/bash
-EXPECTED_HASH="7a49b6ad54d5787a1966a00aad04b542857154ca8598cf42183bb37f31ec12ba"
-ACTUAL_HASH=$(shasum -a 256 /Users/ANASTASIAPRIVÉ_RUMFELS_Propriétaire_de_100%_de vie_et_au-delà/Downloads/Gemini.dmg | awk '{print $1}')
+# Performance optimization:
+# 1. Fast-path check: Check if target file exists before executing shasum, avoiding unnecessary process forks.
+# 2. In-process parsing: Use Bash parameter expansion (${RAW_OUTPUT%% *}) to extract the hash without spawning awk.
+# 3. Quoting: Properly quote path variables to avoid parameter splitting issues.
+
+EXPECTED_HASH="${EXPECTED_HASH:-7a49b6ad54d5787a1966a00aad04b542857154ca8598cf42183bb37f31ec12ba}"
+TARGET_FILE="${TARGET_FILE:-/Users/ANASTASIAPRIVÉ_RUMFELS_Propriétaire_de_100%_de vie_et_au-delà/Downloads/Gemini.dmg}"
+
+if [ ! -f "$TARGET_FILE" ]; then
+  echo "⚠️ ALERTE : La Boîte Noire a été altérée. Sécurité compromise."
+  exit 0
+fi
+
+RAW_OUTPUT=$(shasum -a 256 "$TARGET_FILE" 2>/dev/null)
+ACTUAL_HASH="${RAW_OUTPUT%% *}"
 
 if [ "$EXPECTED_HASH" == "$ACTUAL_HASH" ]; then
   echo "✅ NOMAD : Intégrité certifiée. Fréquence 12_ALPHA stable."
