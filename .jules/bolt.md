@@ -1,0 +1,3 @@
+## 2026-10-05 - Fast-path file verification and subshell avoidance in shell scripts
+**Learning:** In shell scripts, attempting external hash operations (`shasum`) without verifying target file or directory existence leads to unnecessary process forks, stderr noise, and execution latency. Additionally, piping `shasum` output into `awk` spawns an extra process when Bash parameter expansion (`${RAW_OUTPUT%% *}`) can extract the hash in-process.
+**Action:** Always check file existence with `[ -f "$TARGET_FILE" ]` before invoking external hashing tools, quote file paths with spaces, and use parameter expansion instead of piping to `awk`.
