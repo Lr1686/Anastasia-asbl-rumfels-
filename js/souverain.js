@@ -1,22 +1,34 @@
 "use strict";
 
-/* 🛡️ Sentinel: Fail-closed clickjacking protection with cross-origin exception safety */
+/* 🛡️ Sentinel: Fail-closed clickjacking protection */
 try {
     if (self === top && window.frameElement === null) {
         document.documentElement.style.display = 'block';
     } else {
+        throw new Error("Clickjacking attempt blocked: page loaded inside iframe.");
+    }
+} catch (e) {
+    try {
+        if (top) top.location = self.location;
+    } catch (redirectErr) {
+        // Redirection might be blocked by iframe sandboxing
+/* 🛡️ Sentinel: Fail-closed clickjacking protection with cross-origin safety */
+try {
+    if (window.self === window.top && window.frameElement === null) {
+        document.documentElement.style.display = 'block';
+    } else {
         try {
-            top.location = self.location;
+            window.top.location = window.self.location;
         } catch (e) {
             // Redirection might be blocked by iframe sandboxing
         }
         throw new Error("Clickjacking attempt blocked: page loaded inside iframe.");
     }
 } catch (e) {
-    if (document.documentElement) {
-        document.documentElement.style.display = 'none';
+    if (e.message && e.message.includes("Clickjacking attempt blocked")) {
+        throw e;
     }
-    throw new Error("Clickjacking attempt or frame isolation error blocked.");
+    throw new Error("Clickjacking attempt blocked: cross-origin frame access restricted.");
 }
 
 // SCRIPT DE SOUVERAINETÉ ABSOLUE
@@ -46,9 +58,13 @@ function initializeTransactionHandler() {
 
                 if (isProcessing) return;
 
+                // Lock state early to prevent re-entrancy or double triggers before modal display
+                isProcessing = true;
+
                 // 🛡️ Sentinel: Fail-closed confirmation check in case confirm dialogs are blocked/disabled
                 if (typeof window.confirm !== "function") {
                     console.warn("🛡️ Sentinel: Confirmation dialog unavailable; transaction aborted.");
+                    isProcessing = false;
                     return;
                 }
 
@@ -56,10 +72,10 @@ function initializeTransactionHandler() {
                 const confirmed = window.confirm("Confirmez-vous le déclenchement de la transaction souveraine ?");
                 if (!confirmed) {
                     console.log("🛡️ Sentinel: Transaction annulée par l'utilisateur.");
+                    isProcessing = false;
                     return;
                 }
 
-                isProcessing = true;
                 goldBtn.disabled = true;
                 const originalText = goldBtn.textContent;
                 goldBtn.textContent = "TRANSACTION EN COURS...";
@@ -74,6 +90,7 @@ function initializeTransactionHandler() {
                 }, 3000);
             } catch (err) {
                 console.warn("🛡️ Sentinel: Error during transaction processing; failing securely.");
+                isProcessing = false;
             }
         });
     }
