@@ -29,6 +29,13 @@ secrets.json
 # System files
 .DS_Store
 
+# Diagnostic and execution logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
 # Python bytecode and cache directories
 __pycache__/
 *.pyc
