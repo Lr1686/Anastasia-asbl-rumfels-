@@ -70,7 +70,7 @@ def main():
 
         expected_csp_directives = [
             "connect-src 'none'", "img-src 'none'", "font-src 'none'",
-            "frame-src 'none'", "media-src 'none'", "manifest-src 'none'", "worker-src 'none'"
+            "frame-src 'none'", "media-src 'none'", "manifest-src 'none'", "worker-src 'none'", "child-src 'none'"
         ]
         for directive in expected_csp_directives:
             if directive not in csp_content:
@@ -92,7 +92,8 @@ def main():
             "web-share=()", "xr-spatial-tracking=()", "interest-cohort=()", "hid=()", "serial=()", "sync-xhr=()",
             "bluetooth=()", "midi=()", "otp-credentials=()", "window-management=()",
             "clipboard-read=()", "clipboard-write=()", "compute-pressure=()", "idle-detection=()", "storage-access=()",
-            "keyboard-map=()", "captured-surface-control=()", "media-playback-while-not-visible=()", "speaker-selection=()"
+            "keyboard-map=()", "captured-surface-control=()", "media-playback-while-not-visible=()", "speaker-selection=()",
+            "all-screens-capture=()", "window-placement=()"
         ]
         for policy in expected_policies:
             if policy not in permissions_content:
