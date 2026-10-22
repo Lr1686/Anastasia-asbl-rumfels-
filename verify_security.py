@@ -90,7 +90,7 @@ def main():
             "encrypted-media=()", "execution-while-not-rendered=()", "execution-while-out-of-viewport=()",
             "fullscreen=()", "gamepad=()", "picture-in-picture=()", "screen-wake-lock=()",
             "web-share=()", "xr-spatial-tracking=()", "interest-cohort=()", "hid=()", "serial=()", "sync-xhr=()",
-            "bluetooth=()", "midi=()", "otp-credentials=()", "window-management=()",
+            "bluetooth=()", "midi=()", "otp-credentials=()", "window-management=()", "window-placement=()", "all-screens-capture=()",
             "clipboard-read=()", "clipboard-write=()", "compute-pressure=()", "idle-detection=()", "storage-access=()",
             "keyboard-map=()", "captured-surface-control=()", "media-playback-while-not-visible=()", "speaker-selection=()"
         ]
