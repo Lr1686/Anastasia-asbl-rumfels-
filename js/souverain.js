@@ -37,6 +37,7 @@ function initializeTransactionHandler() {
     if (goldBtn) {
         let isProcessing = false;
         goldBtn.addEventListener("click", (event) => {
+            let originalText = "";
             try {
                 // 🛡️ Sentinel: Prevent programmatic synthetic click automation
                 if (!event || !event.isTrusted) {
@@ -65,7 +66,7 @@ function initializeTransactionHandler() {
                 }
 
                 goldBtn.disabled = true;
-                const originalText = goldBtn.textContent;
+                originalText = goldBtn.textContent;
                 goldBtn.textContent = "TRANSACTION EN COURS...";
 
                 console.log("🛡️ Sentinel: Transaction souveraine initiée de manière sécurisée.");
@@ -78,6 +79,12 @@ function initializeTransactionHandler() {
                 }, 3000);
             } catch (err) {
                 console.warn("🛡️ Sentinel: Error during transaction processing; failing securely.");
+                if (goldBtn) {
+                    if (originalText) {
+                        goldBtn.textContent = originalText;
+                    }
+                    goldBtn.disabled = false;
+                }
                 isProcessing = false;
             }
         });
