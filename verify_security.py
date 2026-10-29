@@ -92,12 +92,21 @@ def main():
             "web-share=()", "xr-spatial-tracking=()", "interest-cohort=()", "hid=()", "serial=()", "sync-xhr=()",
             "bluetooth=()", "midi=()", "otp-credentials=()", "window-management=()",
             "clipboard-read=()", "clipboard-write=()", "compute-pressure=()", "idle-detection=()", "storage-access=()",
-            "keyboard-map=()", "captured-surface-control=()", "media-playback-while-not-visible=()", "speaker-selection=()"
+            "keyboard-map=()", "captured-surface-control=()", "media-playback-while-not-visible=()", "speaker-selection=()",
+            "window-placement=()", "local-fonts=()", "all-screens-capture=()", "attribution-reporting=()",
+            "browsing-topics=()", "direct-sockets=()", "shared-storage=()", "private-aggregation=()"
         ]
         for policy in expected_policies:
             if policy not in permissions_content:
                 print(f"❌ Error: Missing expected policy '{policy}' in Permissions-Policy meta tag!")
                 success = False
+
+        # Verify transaction button has type="button" attribute
+        gold_btn_type = page.locator(".gold-btn").get_attribute("type")
+        print(f"Transaction button type attribute: {gold_btn_type}")
+        if gold_btn_type != "button":
+            print("❌ Error: .gold-btn element does not have type='button' attribute!")
+            success = False
 
         # Verify transaction button behavior on programmatic (untrusted) click vs trusted user click
         print("Testing transaction button security logic...")
