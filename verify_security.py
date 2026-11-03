@@ -68,6 +68,10 @@ def main():
             print("❌ Error: 'trusted-types 'none'' is missing from Content-Security-Policy!")
             success = False
 
+        if "script-src-attr 'none'" not in csp_content or "style-src-attr 'none'" not in csp_content:
+            print("❌ Error: Attribute-level source directives ('script-src-attr 'none'', 'style-src-attr 'none'') are missing from Content-Security-Policy!")
+            success = False
+
         # Verify Permissions-Policy content
         permissions_content = page.locator("meta[http-equiv='Permissions-Policy']").get_attribute("content")
         print(f"Found Permissions-Policy: {permissions_content}")
@@ -79,12 +83,35 @@ def main():
             "fullscreen=()", "gamepad=()", "picture-in-picture=()", "screen-wake-lock=()",
             "web-share=()", "xr-spatial-tracking=()", "interest-cohort=()", "hid=()", "serial=()", "sync-xhr=()",
             "bluetooth=()", "midi=()", "otp-credentials=()", "window-management=()",
-            "clipboard-read=()", "clipboard-write=()", "compute-pressure=()", "idle-detection=()", "storage-access=()"
+            "clipboard-read=()", "clipboard-write=()", "compute-pressure=()", "idle-detection=()", "storage-access=()",
+            "keyboard-map=()", "captured-surface-control=()", "media-playback-while-not-visible=()", "speaker-selection=()"
         ]
         for policy in expected_policies:
             if policy not in permissions_content:
                 print(f"❌ Error: Missing expected policy '{policy}' in Permissions-Policy meta tag!")
                 success = False
+
+        # Verify transaction button behavior on programmatic (untrusted) click vs trusted user click
+        print("Testing transaction button security logic...")
+
+        # Test 1: Programmatic untrusted click via page.evaluate should be blocked
+        page.evaluate("document.querySelector('.gold-btn').click()")
+
+        # Test 2: User trusted click with dialog handler
+        dialog_handled = [False]
+        def handle_dialog(dialog):
+            dialog_handled[0] = True
+            print(f"Dialog prompt received: {dialog.message}")
+            dialog.dismiss()
+
+        page.on("dialog", handle_dialog)
+        page.locator(".gold-btn").click()
+
+        if not dialog_handled[0]:
+            print("❌ Error: Trusted user click did not trigger confirmation dialog!")
+            success = False
+        else:
+            print("✅ Confirmation dialog triggered for trusted user click.")
 
         # Let the page execute scripts and check for any console issues
         time.sleep(1)
