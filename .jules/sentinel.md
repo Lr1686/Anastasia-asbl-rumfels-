@@ -77,3 +77,8 @@
 **Vulnerability:** Fallback-reliance on `child-src` for worker/frame creation, unconstrained modern browser permissions, and missing explicit button types.
 **Learning:** While `frame-src` and `worker-src` govern iframe and worker instantiation in modern CSP Level 3 browsers, older browsers or fallback contexts still consult `child-src`. Leaving `child-src` undeclared risks fallback leaks. Similarly, omitting newer Permissions-Policy features (`attribution-reporting`, `browsing-topics`, `direct-sockets`, `shared-storage`, `private-aggregation`, `local-fonts`, `window-placement`, `all-screens-capture`) leaves browser tracking and peripheral capabilities enabled. Furthermore, omitting `type="button"` on interactive button elements allows potential unintentional form submissions or unexpected activation modes in form-surrounding contexts.
 **Prevention:** Explicitly specify `child-src 'none'` alongside `worker-src 'none'` and `frame-src 'none'`, comprehensively disable all emergent browser capabilities in `Permissions-Policy`, and explicitly set `type="button"` on transactional UI elements.
+
+## 2026-08-16 - CSP Base-URI Lockdown to 'none'
+**Vulnerability:** Incomplete base-uri restriction allowing origin-based `<base>` tag injection.
+**Learning:** Setting `base-uri 'self'` in Content-Security-Policy allows document base URI modification as long as the target URI matches the origin. On static single-page applications without any need for `<base>` elements, allowing `'self'` unnecessarily leaves room for relative URL hijacking if an HTML injection occurs.
+**Prevention:** Explicitly declare `base-uri 'none'` in the Content-Security-Policy to completely disallow `<base>` tag injection and strictly enforce absolute and origin root resolution.
